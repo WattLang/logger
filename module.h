@@ -1,7 +1,6 @@
 #ifndef WS_MODULE_H
 #define WS_MODULE_H
 
-
 #include <cstdint>
 #include <string>
 #include <iostream>
@@ -14,28 +13,28 @@
 namespace ws {
     template<typename... Ts>
     void print(Ts&&... args) {
-        std::cerr << (std::forward<Ts&&>(args) << ...);
+        (std::cerr << ... << std::forward<Ts&&>(args) );
     }
 
 
 
     template<typename... Ts>
     void pipe(Ts&&... args) {
-        std::cout << (std::forward<Ts&&>(args) << ...);
+        (std::cout << ... << std::forward<Ts&&>(args));
     }
 
 
 
     template<typename... Ts>
     void println(Ts&&... args) {
-        std::cerr << (std::forward<Ts&&>(args) << ...) << std::endl;
+        (std::cerr << ... << std::forward<Ts&&>(args)) << std::endl;
     }
 
 
 
     template<typename... Ts>
     void pipeln(Ts&&... args) {
-        std::cout << (std::forward<Ts&&>(args) << ...) << std::endl;
+        (std::cout << ... << std::forward<Ts&&>(args)) << std::endl;
     }
 
 
@@ -66,20 +65,19 @@ namespace ws {
                     ++packet_id;
                 }
 
-                buffer.clear();
-
-                std::cin.read(&buffer[0], buffer_size);
+                buffer.erase(buffer.begin() + std::cin.gcount(), buffer.end());
                 callback(buffer, packet_id, true);
             }
     };
 
 
-    enum {
-        LOGGER_NORMAL,
-        LOGGER_NOTICE,
-        LOGGER_WARNING
-    };
-
+    namespace {
+        enum {
+            LOGGER_NORMAL,
+            LOGGER_NOTICE,
+            LOGGER_WARNING
+        };
+    }
 
 
     class Logger {
@@ -115,6 +113,5 @@ namespace ws {
             }
     };
 }
-
 
 #endif
