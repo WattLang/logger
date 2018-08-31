@@ -55,7 +55,7 @@ namespace ws {
             }
 
 
-            // Callback = (const std::string& buffer, bool is_end);
+            // Callback = (const std::string& buffer, int packet_id, bool is_end);
             void read(
                 std::function<void(const std::string&, int, bool)> callback
             ) {
