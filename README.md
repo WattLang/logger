@@ -51,6 +51,35 @@ int main(int argc, char const *argv[]) {
 }
 ```
 
+##### 3. Logging & IO
+```cpp
+#include <iostream>
+#include "module.h"
+
+
+int main(int argc, char const *argv[]) {
+
+    ws::print("Hello", " ", "there!", "\n");
+    ws::println("Hello", " ", "there!");
+
+    ws::pipe("Pipe ", 1, "\n");
+    ws::pipeln("Pipe ", 2);
+
+    ws::notice("Notice ", 1, "\n");
+    ws::noticeln("Notice ", 2);
+
+    ws::warn("Warn ", 1, "\n");
+    ws::warnln("Warn ", 2);
+
+    ws::error("Error ", 1, "\n");
+    ws::errorln("Error ", 2);
+
+    ws::print("Yes!") << " " << "No!" << std::endl;
+
+    return 0;
+}
+```
+
 ### Run
 
 > Note: This works with `bash` but should also work with other shells that support the same functionality.

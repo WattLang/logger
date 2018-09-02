@@ -5,43 +5,14 @@
 #include <cstdint>
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <functional>
 #include <vector>
 #include <utility>
 
 
 namespace ws {
-    template<typename... Ts>
-    void print(Ts&&... args) {
-        (std::cerr << ... << std::forward<Ts&&>(args) );
-    }
-
-
-
-    template<typename... Ts>
-    void pipe(Ts&&... args) {
-        (std::cout << ... << std::forward<Ts&&>(args));
-    }
-
-
-
-    template<typename... Ts>
-    void println(Ts&&... args) {
-        (std::cerr << ... << std::forward<Ts&&>(args)) << std::endl;
-    }
-
-
-
-    template<typename... Ts>
-    void pipeln(Ts&&... args) {
-        (std::cout << ... << std::forward<Ts&&>(args)) << std::endl;
-    }
-
-
-
     // Receive data in chunks.
-    // Callback = (const std::string& buffer, int packet_id, bool is_end);
+    // Callback = (const std::string& buffer, int chunk_id, bool eof);
     void receive(
         uintmax_t buffer_size,
         std::function<void(const std::string&, int, bool)> callback
@@ -70,7 +41,7 @@ namespace ws {
         receive(
             buffer_size,
 
-            [&] (const std::string& buffer, int id, bool is_end) {
+            [&] (const std::string& buffer, int chunk_id, bool eof) {
                 accumulator += buffer;
             }
         );
@@ -81,49 +52,81 @@ namespace ws {
 
 
 
-    namespace {
-        enum {
-            LOGGER_NORMAL,
-            LOGGER_NOTICE,
-            LOGGER_WARNING
-        };
+
+
+
+    // Logging and IO.
+    template<typename... Ts>
+    std::ostream& print(Ts&&... args) {
+        return (std::cerr << ... << std::forward<Ts&&>(args));
     }
 
 
 
-    // Helpful for logging alongside data piping.
-    class Logger {
-        private:
-            std::vector<std::string> symbols = {
-                "[-] ",  // Normal
-                "[*] ",  // Notice
-                "[!] "   // Warning
-            };
+    template<typename... Ts>
+    std::ostream& pipe(Ts&&... args) {
+        return (std::cout << ... << std::forward<Ts&&>(args));
+    }
 
 
-        public:
-            Logger() {}
+
+    template<typename... Ts>
+    std::ostream& notice(Ts&&... args) {
+        return (std::cerr << "[-] " << ... << std::forward<Ts&&>(args));
+    }
 
 
-            void print(const std::string& msg) {
-                std::cerr << msg << '\n';
-            }
+
+    template<typename... Ts>
+    std::ostream& warn(Ts&&... args) {
+        return (std::cerr << "[*] " << ... << std::forward<Ts&&>(args));
+    }
 
 
-            void log(const std::string& msg) {
-                std::cerr << symbols[LOGGER_NORMAL] << msg << '\n';
-            }
+
+    template<typename... Ts>
+    std::ostream& error(Ts&&... args) {
+        return (std::cerr << "[!] " << ... << std::forward<Ts&&>(args));
+    }
 
 
-            void notice(const std::string& msg) {
-                std::cerr << symbols[LOGGER_NOTICE] << msg << '\n';
-            }
 
 
-            void warn(const std::string& msg) {
-                std::cerr << symbols[LOGGER_WARNING] << msg << '\n';
-            }
-    };
+
+
+    // Logging and IO with line endings...
+    template<typename... Ts>
+    std::ostream& println(Ts&&... args) {
+        return ws::print(std::forward<Ts&&>(args)...) << "\n";
+    }
+
+
+
+    template<typename... Ts>
+    std::ostream& pipeln(Ts&&... args) {
+        return ws::pipe(std::forward<Ts&&>(args)...) << "\n";
+    }
+
+
+
+    template<typename... Ts>
+    std::ostream& noticeln(Ts&&... args) {
+        return ws::notice(std::forward<Ts&&>(args)...) << "\n";
+    }
+
+
+
+    template<typename... Ts>
+    std::ostream& warnln(Ts&&... args) {
+        return ws::warn(std::forward<Ts&&>(args)...) << "\n";
+    }
+
+
+
+    template<typename... Ts>
+    std::ostream& errorln(Ts&&... args) {
+        return ws::error(std::forward<Ts&&>(args)...) << "\n";
+    }
 }
 
 
