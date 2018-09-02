@@ -54,39 +54,46 @@ namespace ws {
 
 
 
+    // Streams.
+    std::ostream& piper = std::cout;
+    std::ostream& printer = std::cout;
+
+
+
+
 
     // Logging and IO.
     template<typename... Ts>
     std::ostream& print(Ts&&... args) {
-        return (std::cerr << ... << std::forward<Ts&&>(args));
+        return (ws::printer << ... << std::forward<Ts&&>(args));
     }
 
 
 
     template<typename... Ts>
     std::ostream& pipe(Ts&&... args) {
-        return (std::cout << ... << std::forward<Ts&&>(args));
+        return (ws::piper << ... << std::forward<Ts&&>(args));
     }
 
 
 
     template<typename... Ts>
     std::ostream& notice(Ts&&... args) {
-        return (std::cerr << "[-] " << ... << std::forward<Ts&&>(args));
+        return ws::print("[-] ", std::forward<Ts&&>(args)...);
     }
 
 
 
     template<typename... Ts>
     std::ostream& warn(Ts&&... args) {
-        return (std::cerr << "[*] " << ... << std::forward<Ts&&>(args));
+        return ws::print("[*] ", std::forward<Ts&&>(args)...);
     }
 
 
 
     template<typename... Ts>
     std::ostream& error(Ts&&... args) {
-        return (std::cerr << "[!] " << ... << std::forward<Ts&&>(args));
+        return ws::print("[!] ", std::forward<Ts&&>(args)...);
     }
 
 

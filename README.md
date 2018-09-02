@@ -20,7 +20,7 @@ int main(int argc, char const *argv[]) {
 
         [&] (const std::string& buffer, int id, bool is_end) {
             // Pass the data along through the pipe.
-            ws::pipe(buffer);
+            ws::piper << buffer;
         }
     );
 
@@ -45,7 +45,7 @@ int main(int argc, char const *argv[]) {
 
 
     // Pipe the contents.
-    ws::pipe(contents);
+    ws::piper << contents;
 
     return 0;
 }
@@ -75,6 +75,9 @@ int main(int argc, char const *argv[]) {
     ws::errorln("Error ", 2);
 
     ws::print("Yes!") << " " << "No!" << std::endl;
+
+    ws::printer << "Printer\n";
+    ws::piper << "Piper\n";
 
     return 0;
 }
