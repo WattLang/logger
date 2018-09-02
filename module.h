@@ -1,6 +1,7 @@
 #ifndef WS_MODULE_H
 #define WS_MODULE_H
 
+
 #include <cstdint>
 #include <string>
 #include <iostream>
@@ -39,36 +40,45 @@ namespace ws {
 
 
 
-    class Receiver {
-        private:
-            uintmax_t       buffer_size;
-            std::string     buffer;
+    // Receive data in chunks.
+    // Callback = (const std::string& buffer, int packet_id, bool is_end);
+    void receive(
+        uintmax_t buffer_size,
+        std::function<void(const std::string&, int, bool)> callback
+    ) {
+        std::string buffer(buffer_size, '\0');
+        int packet_id = 0;
 
 
-        public:
-            Receiver(uintmax_t buffer_size_):
-                buffer_size(buffer_size_),
-                buffer(buffer_size_, '\0')
-            {
+        while (std::cin.read(&buffer[0], buffer_size)) {
+            callback(buffer, packet_id, false);
+            ++packet_id;
+        }
 
+
+        buffer.erase(buffer.begin() + std::cin.gcount(), buffer.end());
+        callback(buffer, packet_id, true);
+    }
+
+
+
+    // Accumulate all data and return a single string.
+    std::string receive_all(uintmax_t buffer_size) {
+        std::string accumulator;
+
+
+        receive(
+            buffer_size,
+
+            [&] (const std::string& buffer, int id, bool is_end) {
+                accumulator += buffer;
             }
+        );
 
 
-            // Callback = (const std::string& buffer, int packet_id, bool is_end);
-            void read(
-                std::function<void(const std::string&, int, bool)> callback
-            ) {
-                int packet_id = 0;
+        return accumulator;
+    }
 
-                while (std::cin.read(&buffer[0], buffer_size)) {
-                    callback(buffer, packet_id, false);
-                    ++packet_id;
-                }
-
-                buffer.erase(buffer.begin() + std::cin.gcount(), buffer.end());
-                callback(buffer, packet_id, true);
-            }
-    };
 
 
     namespace {
@@ -80,6 +90,8 @@ namespace ws {
     }
 
 
+
+    // Helpful for logging alongside data piping.
     class Logger {
         private:
             std::vector<std::string> symbols = {
@@ -113,5 +125,6 @@ namespace ws {
             }
     };
 }
+
 
 #endif
