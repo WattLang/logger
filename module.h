@@ -56,7 +56,7 @@ namespace ws {
 
     // Streams.
     std::ostream& piper = std::cout;
-    std::ostream& printer = std::cout;
+    std::ostream& printer = std::cerr;
 
 
 
