@@ -9,6 +9,8 @@
 #include <vector>
 #include <utility>
 
+#include "rang/include/rang.hpp"
+
 
 namespace ws::module {
     // Receive data in chunks.
@@ -134,17 +136,66 @@ namespace ws::module {
     inline std::ostream& errorln(Ts&&... args) {
         return ws::module::error(std::forward<Ts&&>(args)...) << "\n";
     }
-}
 
 
-// Colour support
-#ifndef WS_MODULE_NOCOLOUR
+    //Coloured print functions 
 
-    namespace ws {
+    enum PrintColour : unsigned short {
+        FG_RED    = static_cast<unsigned short>(rang::fgB::red),
+        FG_BLUE   = static_cast<unsigned short>(rang::fgB::blue),
+        FG_GREEN  = static_cast<unsigned short>(rang::fgB::green),
+        FG_YELLOW = static_cast<unsigned short>(rang::fgB::yellow),
+    };
 
+    template<typename... Ts>
+    inline std::ostream& printc(PrintColour colour, Ts&&... args) {
+        return ((ws::module::printer << static_cast<rang::fgB>(colour)) << ... << std::forward<Ts&&>(args)) << rang::fg::reset;
     }
 
-#endif
+
+    template<typename... Ts>
+    inline std::ostream& noticec(Ts&&... args) {
+        return ((ws::module::printer << rang::fgB::blue << "[-]" << rang::fg::reset ) << ... << std::forward<Ts&&>(args));
+    }
+
+
+    template<typename... Ts>
+    inline std::ostream& warnc(Ts&&... args) {
+        return ((ws::module::printer << rang::fgB::yellow << "[*]" << rang::fg::reset ) << ... << std::forward<Ts&&>(args));
+    }
+
+
+    template<typename... Ts>
+    inline std::ostream& errorc(Ts&&... args) {
+        return ((ws::module::printer << rang::fgB::red << "[!]" << rang::fg::reset ) << ... << std::forward<Ts&&>(args));
+    }
+
+    template<typename... Ts>
+    inline std::ostream& printlnc(PrintColour colour, Ts&&... args) {
+        return ws::module::printc(colour, std::forward<Ts&&>(args)...) << "\n";
+    }
+
+
+    template<typename... Ts>
+    inline std::ostream& noticelnc(Ts&&... args) {
+        return ws::module::noticec(std::forward<Ts&&>(args)...) << "\n";
+    }
+
+
+
+    template<typename... Ts>
+    inline std::ostream& warnlnc(Ts&&... args) {
+        return ws::module::warnc(std::forward<Ts&&>(args)...) << "\n";
+    }
+
+
+
+    template<typename... Ts>
+    inline std::ostream& errorlnc(Ts&&... args) {
+        return ws::module::errorc(std::forward<Ts&&>(args)...) << "\n";
+    }
+    
+}
 
 
 #endif
