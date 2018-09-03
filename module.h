@@ -10,10 +10,10 @@
 #include <utility>
 
 
-namespace ws {
+namespace ws::module {
     // Receive data in chunks.
     // Callback = (const std::string& buffer, int chunk_id, bool eof);
-    void receive(
+    inline void receive(
         uintmax_t buffer_size,
         std::function<void(const std::string&, int, bool)> callback
     ) {
@@ -34,7 +34,7 @@ namespace ws {
 
 
     // Accumulate all data and return a single string.
-    std::string receive_all(uintmax_t buffer_size) {
+    inline std::string receive_all(uintmax_t buffer_size) {
         std::string accumulator;
 
 
@@ -55,8 +55,8 @@ namespace ws {
 
 
     // Streams.
-    std::ostream& piper = std::cout;
-    std::ostream& printer = std::cerr;
+    inline std::ostream& piper = std::cout;
+    inline std::ostream& printer = std::cerr;
 
 
 
@@ -64,35 +64,35 @@ namespace ws {
 
     // Logging and IO.
     template<typename... Ts>
-    std::ostream& print(Ts&&... args) {
+    inline std::ostream& print(Ts&&... args) {
         return (ws::printer << ... << std::forward<Ts&&>(args));
     }
 
 
 
     template<typename... Ts>
-    std::ostream& pipe(Ts&&... args) {
+    inline std::ostream& pipe(Ts&&... args) {
         return (ws::piper << ... << std::forward<Ts&&>(args));
     }
 
 
 
     template<typename... Ts>
-    std::ostream& notice(Ts&&... args) {
+    inline std::ostream& notice(Ts&&... args) {
         return ws::print("[-] ", std::forward<Ts&&>(args)...);
     }
 
 
 
     template<typename... Ts>
-    std::ostream& warn(Ts&&... args) {
+    inline std::ostream& warn(Ts&&... args) {
         return ws::print("[*] ", std::forward<Ts&&>(args)...);
     }
 
 
 
     template<typename... Ts>
-    std::ostream& error(Ts&&... args) {
+    inline std::ostream& error(Ts&&... args) {
         return ws::print("[!] ", std::forward<Ts&&>(args)...);
     }
 
@@ -103,38 +103,48 @@ namespace ws {
 
     // Logging and IO with line endings...
     template<typename... Ts>
-    std::ostream& println(Ts&&... args) {
+    inline std::ostream& println(Ts&&... args) {
         return ws::print(std::forward<Ts&&>(args)...) << "\n";
     }
 
 
 
     template<typename... Ts>
-    std::ostream& pipeln(Ts&&... args) {
+    inline std::ostream& pipeln(Ts&&... args) {
         return ws::pipe(std::forward<Ts&&>(args)...) << "\n";
     }
 
 
 
     template<typename... Ts>
-    std::ostream& noticeln(Ts&&... args) {
+    inline std::ostream& noticeln(Ts&&... args) {
         return ws::notice(std::forward<Ts&&>(args)...) << "\n";
     }
 
 
 
     template<typename... Ts>
-    std::ostream& warnln(Ts&&... args) {
+    inline std::ostream& warnln(Ts&&... args) {
         return ws::warn(std::forward<Ts&&>(args)...) << "\n";
     }
 
 
 
     template<typename... Ts>
-    std::ostream& errorln(Ts&&... args) {
+    inline std::ostream& errorln(Ts&&... args) {
         return ws::error(std::forward<Ts&&>(args)...) << "\n";
     }
 }
+
+
+// Colour support
+#ifndef WS_MODULE_NOCOLOUR
+
+    namespace ws {
+
+    }
+
+#endif
 
 
 #endif
