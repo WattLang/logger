@@ -65,35 +65,35 @@ namespace ws::module {
     // Logging and IO.
     template<typename... Ts>
     inline std::ostream& print(Ts&&... args) {
-        return (ws::printer << ... << std::forward<Ts&&>(args));
+        return (ws::module::printer << ... << std::forward<Ts&&>(args));
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& pipe(Ts&&... args) {
-        return (ws::piper << ... << std::forward<Ts&&>(args));
+        return (ws::module::piper << ... << std::forward<Ts&&>(args));
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& notice(Ts&&... args) {
-        return ws::print("[-] ", std::forward<Ts&&>(args)...);
+        return ws::module::print("[-] ", std::forward<Ts&&>(args)...);
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& warn(Ts&&... args) {
-        return ws::print("[*] ", std::forward<Ts&&>(args)...);
+        return ws::module::print("[*] ", std::forward<Ts&&>(args)...);
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& error(Ts&&... args) {
-        return ws::print("[!] ", std::forward<Ts&&>(args)...);
+        return ws::module::print("[!] ", std::forward<Ts&&>(args)...);
     }
 
 
@@ -104,35 +104,35 @@ namespace ws::module {
     // Logging and IO with line endings...
     template<typename... Ts>
     inline std::ostream& println(Ts&&... args) {
-        return ws::print(std::forward<Ts&&>(args)...) << "\n";
+        return ws::module::print(std::forward<Ts&&>(args)...) << "\n";
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& pipeln(Ts&&... args) {
-        return ws::pipe(std::forward<Ts&&>(args)...) << "\n";
+        return ws::module::pipe(std::forward<Ts&&>(args)...) << "\n";
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& noticeln(Ts&&... args) {
-        return ws::notice(std::forward<Ts&&>(args)...) << "\n";
+        return ws::module::notice(std::forward<Ts&&>(args)...) << "\n";
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& warnln(Ts&&... args) {
-        return ws::warn(std::forward<Ts&&>(args)...) << "\n";
+        return ws::module::warn(std::forward<Ts&&>(args)...) << "\n";
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& errorln(Ts&&... args) {
-        return ws::error(std::forward<Ts&&>(args)...) << "\n";
+        return ws::module::error(std::forward<Ts&&>(args)...) << "\n";
     }
 }
 
