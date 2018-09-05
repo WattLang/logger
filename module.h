@@ -41,7 +41,7 @@ namespace ws::module {
         receive(
             buffer_size,
 
-            [&] (const std::string& buffer, int chunk_id, bool eof) {
+            [&] (const std::string& buffer, int, bool) {
                 accumulator += buffer;
             }
         );
