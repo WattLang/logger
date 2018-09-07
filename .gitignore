@@ -34,3 +34,5 @@
 
 testing/
 .vscode/
+
+.directory
