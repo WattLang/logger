@@ -148,7 +148,7 @@ namespace ws::module {
 
     template<typename... Ts>
     inline std::ostream& printc(rang::fgB colour, Ts&&... args) {
-        return ((ws::module::printer << colour << ">>> " << rang::fg::reset) << ... << std::forward<Ts&&>(args));
+        return ((ws::module::printer << colour) << ... << std::forward<Ts&&>(args)) << rang::fg::reset;
     }
 
 
