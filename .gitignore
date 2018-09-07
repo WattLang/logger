@@ -33,3 +33,6 @@
 
 
 testing/
+.vscode/
+
+.directory

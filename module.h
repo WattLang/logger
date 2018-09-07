@@ -9,6 +9,8 @@
 #include <vector>
 #include <utility>
 
+#include "rang/include/rang.hpp"
+
 
 namespace ws::module {
     // Receive data in chunks.
@@ -41,7 +43,7 @@ namespace ws::module {
         receive(
             buffer_size,
 
-            [&] (const std::string& buffer, int chunk_id, bool eof) {
+            [&] (const std::string& buffer, int, bool) {
                 accumulator += buffer;
             }
         );
@@ -57,6 +59,11 @@ namespace ws::module {
     // Streams.
     inline std::ostream& piper = std::cout;
     inline std::ostream& printer = std::cerr;
+
+    // Output symbols
+    constexpr auto SYMBOL_NOTICE = "[-] ";
+    constexpr auto SYMBOL_WARN   = "[*] ";
+    constexpr auto SYMBOL_ERROR  = "[!] ";
 
 
 
@@ -79,21 +86,21 @@ namespace ws::module {
 
     template<typename... Ts>
     inline std::ostream& notice(Ts&&... args) {
-        return ws::module::print("[-] ", std::forward<Ts&&>(args)...);
+        return ws::module::print(SYMBOL_NOTICE, std::forward<Ts&&>(args)...);
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& warn(Ts&&... args) {
-        return ws::module::print("[*] ", std::forward<Ts&&>(args)...);
+        return ws::module::print(SYMBOL_WARN, std::forward<Ts&&>(args)...);
     }
 
 
 
     template<typename... Ts>
     inline std::ostream& error(Ts&&... args) {
-        return ws::module::print("[!] ", std::forward<Ts&&>(args)...);
+        return ws::module::print(SYMBOL_ERROR, std::forward<Ts&&>(args)...);
     }
 
 
@@ -134,17 +141,68 @@ namespace ws::module {
     inline std::ostream& errorln(Ts&&... args) {
         return ws::module::error(std::forward<Ts&&>(args)...) << "\n";
     }
-}
 
 
-// Colour support
-#ifndef WS_MODULE_NOCOLOUR
+    //Coloured print functions 
 
-    namespace ws {
+    using fg = rang::fgB;
 
+    constexpr auto NOTICE_COLOR = fg::blue;
+    constexpr auto WARN_COLOR   = fg::yellow;
+    constexpr auto ERROR_COLOR  = fg::red;
+
+    template<typename... Ts>
+    inline std::ostream& printc(fg colour, Ts&&... args) {
+        return ws::module::print(colour, std::forward<Ts&&>(args)..., rang::fg::reset);
     }
 
-#endif
+
+    template<typename... Ts>
+    inline std::ostream& noticec(Ts&&... args) {
+        ws::module::printc(NOTICE_COLOR, SYMBOL_NOTICE);
+        return ws::module::print(std::forward<Ts&&>(args)...);
+    }
+
+
+    template<typename... Ts>
+    inline std::ostream& warnc(Ts&&... args) {
+        ws::module::printc(WARN_COLOR, SYMBOL_WARN);
+        return ws::module::print(std::forward<Ts&&>(args)...);
+    }
+
+
+    template<typename... Ts>
+    inline std::ostream& errorc(Ts&&... args) {
+        ws::module::printc(ERROR_COLOR, SYMBOL_ERROR);
+        return ws::module::print(std::forward<Ts&&>(args)...);
+    }
+
+    template<typename... Ts>
+    inline std::ostream& printlnc(fg colour, Ts&&... args) {
+        return ws::module::printc(colour, std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template<typename... Ts>
+    inline std::ostream& noticelnc(Ts&&... args) {
+        return ws::module::noticec(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+    template<typename... Ts>
+    inline std::ostream& warnlnc(Ts&&... args) {
+        return ws::module::warnc(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+    template<typename... Ts>
+    inline std::ostream& errorlnc(Ts&&... args) {
+        return ws::module::errorc(std::forward<Ts&&>(args)..., '\n');
+    }
+    
+}
 
 
 #endif
