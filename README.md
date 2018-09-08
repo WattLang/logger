@@ -83,6 +83,36 @@ int main(int argc, char const *argv[]) {
 }
 ```
 
+##### 4. Colours!
+```cpp
+#include <iostream>
+#include "../module.h"
+
+
+int main(int argc, char const *argv[]) {
+
+    ws::module::println(
+        ws::module::style::bold,
+        ws::module::colour::bg::magenta,
+        "Testing... "
+    );
+
+    ws::module::noticeln("Notice");
+    ws::module::warnln("Warn ");
+    ws::module::errorln("Error ");
+
+    ws::module::println(
+        ws::module::colour::fg::bright::green, "Yes!",
+        " ",
+        ws::module::colour::fg::bright::red, "No!"
+    );
+
+    ws::module::rainbowln("Hello ", "how ", "are ", "you?");
+
+    return 0;
+}
+```
+
 ### Run
 
 > Note: This works with `bash` but should also work with other shells that support the same functionality.
