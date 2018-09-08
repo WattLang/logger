@@ -133,7 +133,7 @@ namespace ws::module {
 
 
 
-    namespace {
+    namespace details {
         // Reset style, BG and FG all at once.
         struct Reset {};
 
@@ -145,7 +145,7 @@ namespace ws::module {
         // Notice style.
         struct Notice {};
 
-        std::ostream& operator<<(std::ostream& os, const Notice& obj) {
+        inline std::ostream& operator<<(std::ostream& os, const Notice& obj) {
             return (os << style::bold << colour::notice);
         }
 
@@ -153,7 +153,7 @@ namespace ws::module {
         // Warn style.
         struct Warn {};
 
-        std::ostream& operator<<(std::ostream& os, const Warn& obj) {
+        inline std::ostream& operator<<(std::ostream& os, const Warn& obj) {
             return (os << style::bold << colour::warn);
         }
 
@@ -161,7 +161,7 @@ namespace ws::module {
         // Error style.
         struct Error {};
 
-        std::ostream& operator<<(std::ostream& os, const Error& obj) {
+        inline std::ostream& operator<<(std::ostream& os, const Error& obj) {
             return (os << style::bold << colour::error);
         }
     }
@@ -171,19 +171,21 @@ namespace ws::module {
 
     // Custom styles
     namespace style {
-        inline Reset reset;
-        inline Notice notice;
-        inline Warn warn;
-        inline Error error;
+        inline details::Reset reset;
+        inline details::Notice notice;
+        inline details::Warn warn;
+        inline details::Error error;
     }
 
 
 
     // Output symbols
-    namespace {
-        constexpr auto SYMBOL_NOTICE = "[-] ";
-        constexpr auto SYMBOL_WARN   = "[*] ";
-        constexpr auto SYMBOL_ERROR  = "[!] ";
+    namespace details {
+        namespace symbol {
+            constexpr auto notice = "[-] ";
+            constexpr auto warn   = "[*] ";
+            constexpr auto error  = "[!] ";
+        }
     }
 
 
@@ -244,7 +246,7 @@ namespace ws::module {
     // Logging with colour.
     template<typename... Ts>
     inline std::ostream& notice(Ts&&... args) {
-        ws::module::print(style::notice, SYMBOL_NOTICE);
+        ws::module::print(style::notice, details::symbol::notice);
         return ws::module::print(std::forward<Ts&&>(args)...);
     }
 
@@ -252,7 +254,7 @@ namespace ws::module {
 
     template<typename... Ts>
     inline std::ostream& warn(Ts&&... args) {
-        ws::module::print(style::warn, SYMBOL_WARN);
+        ws::module::print(style::warn, details::symbol::warn);
         return ws::module::print(std::forward<Ts&&>(args)...);
     }
 
@@ -260,7 +262,7 @@ namespace ws::module {
 
     template<typename... Ts>
     inline std::ostream& error(Ts&&... args) {
-        ws::module::print(style::error, SYMBOL_ERROR);
+        ws::module::print(style::error, details::symbol::error);
         return ws::module::print(std::forward<Ts&&>(args)...);
     }
 
@@ -295,46 +297,52 @@ namespace ws::module {
 
 
     // Easter eggs
-    namespace {
-        std::random_device rd;
-        std::mt19937 rng(rd());
-        std::uniform_int_distribution<int> uni(0, 5);
-
-
+    namespace details {
         using colour_t = decltype(colour::fg::bright::black);
 
 
-        colour_t random_colour() {
-            return std::array<colour_t, 6>{
-                colour::fg::bright::red,
-                colour::fg::bright::green,
-                colour::fg::bright::yellow,
-                colour::fg::bright::blue,
-                colour::fg::bright::magenta,
-                colour::fg::bright::cyan
-            }.at(uni(rng));
+        inline constexpr colour_t palette[] = {
+            colour::fg::bright::red,
+            colour::fg::bright::green,
+            colour::fg::bright::yellow,
+            colour::fg::bright::blue,
+            colour::fg::bright::magenta,
+            colour::fg::bright::cyan
+        };
+
+
+        inline std::random_device rd;
+        inline std::mt19937 rng(rd());
+        inline std::uniform_int_distribution<int> uni(0, std::size(palette) - 1);
+
+
+        inline colour_t random_colour() {
+            return details::palette[uni(rng)];
         }
     }
 
 
-    template <typename T>
-    inline std::ostream& rainbow(T&& arg) {
-        return ws::module::print(random_colour(), arg);
-    }
 
 
-    template <typename T1, typename T2, typename... Ts>
-    inline std::ostream& rainbow(T1&& arg1, T2&& arg2, Ts&&... args) {
-        ws::module::rainbow(arg1);
-        return ws::module::rainbow(arg2, std::forward<Ts&&>(args)...);
+
+    template<typename... Ts>
+    inline std::ostream& rainbow(Ts&&... args) {
+        auto _ = { (
+            ws::module::print(
+                details::random_colour(),
+                std::forward<Ts>(args)
+            ), 0
+        )... };
+
+        return ws::module::printer;
     }
+
 
 
     template <typename... Ts>
     inline std::ostream& rainbowln(Ts&&... args) {
         return ws::module::rainbow(std::forward<Ts&&>(args)..., '\n');
     }
-
 }
 
 
