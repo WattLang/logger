@@ -1,9 +1,10 @@
 # module
+
 A simple header for making the task of piping data between processes easier.
 
-### Examples
+## Examples
 
-##### 1. Processing streamed data
+#### 1. Processing streamed data
 
 ```cpp
 #include <iostream>
@@ -29,7 +30,7 @@ int main(int argc, char const *argv[]) {
 }
 ```
 
-##### 2. Processing accumulated data
+#### 2. Processing accumulated data
 
 ```cpp
 #include <iostream>
@@ -51,7 +52,8 @@ int main(int argc, char const *argv[]) {
 }
 ```
 
-##### 3. Logging & IO
+#### 3. Logging & IO
+
 ```cpp
 #include <iostream>
 #include "module.h"
@@ -83,7 +85,38 @@ int main(int argc, char const *argv[]) {
 }
 ```
 
-### Run
+#### 4. Colours!
+
+```cpp
+#include <iostream>
+#include "../module.h"
+
+
+int main(int argc, char const *argv[]) {
+
+    ws::module::println(
+        ws::module::style::bold,
+        ws::module::colour::bg::magenta,
+        "Testing... "
+    );
+
+    ws::module::noticeln("Notice");
+    ws::module::warnln("Warn ");
+    ws::module::errorln("Error ");
+
+    ws::module::println(
+        ws::module::colour::fg::bright::green, "Yes!",
+        " ",
+        ws::module::colour::fg::bright::red, "No!"
+    );
+
+    ws::module::rainbowln("Hello ", "how ", "are ", "you?");
+
+    return 0;
+}
+```
+
+## Run
 
 > Note: This works with `bash` but should also work with other shells that support the same functionality.
 
@@ -94,3 +127,60 @@ int main(int argc, char const *argv[]) {
 `./reciever.out < <filename>`
 
 `cat <filename> | ./reciever.out | ./reciever.out`
+
+## Interface
+
+> Note: anything defined within the "details" namespace is used internally and should not be used directly by the user.
+
+#### Constants & Globals
+
+| Styles  | ws::module::style::                             |
+| ------- | ----------------------------------------------- |
+| bold    | Makes the text bold.                            |
+| reverse | Swaps the background and foreground colours.    |
+| reset   | Reset the style so the text appears normal.     |
+| notice  | Set the text to bold and use the notice colour. |
+| warn    | Set the text to bold and use the warn colour.   |
+| error   | Set the text to bold and use the error colour.  |
+
+| Streams | ws::module::                       |
+| :------ | ---------------------------------- |
+| printer | Alias the std::cerr output steam.  |
+| piper   | Alias the std::cout output stream. |
+
+| Colours | ws::module::colour::                                     |
+| ------- | -------------------------------------------------------- |
+| black   | Looks like coal.                                         |
+| red     | Same colour as the liquid being pumped around your body. |
+| green   | That furry stuff that grows in your garden colour.       |
+| yellow  | The Sun. (don't stare at it)                             |
+| blue    | The Ocean or The Sky depending on shade.                 |
+| magenta | Some flowers look like this.                             |
+| cyan    | Also flowers.                                            |
+| grey    | All fifty shades of it.                                  |
+
+> All of the above colours exist in `fg::`, `bg::`, `fg::bright::` and `bg::bright::`.
+
+| Special Colours | ws::module::colour::        |
+| --------------- | --------------------------- |
+| notice          | Colour to use for notices.  |
+| warn            | Colour to use for warnings. |
+| error           | Colour to use for errors.   |
+
+#### Functions.
+
+| Data Handling | ws::module::                                                 |
+| ------------- | ------------------------------------------------------------ |
+| receive       | Recieve data on std::cin in chunks of N bytes using a callback. |
+| receive_all   | Accumulate all the data from std::cin and return a std::string. |
+
+| Logging | ws::module::                                                 |
+| ------- | ------------------------------------------------------------ |
+| print   | Prints a list of objects to ws::module::printer and appends ws::module::style::reset. |
+| pipe    | Same as print but outputs to ws::module::piper.              |
+| notice  | Same as print but prepends message with `[-]` and uses ws::module::style::notice. |
+| warn    | Same as print but prepends message with `[*]` and uses ws::module::style::warn. |
+| error   | Same as print but prepends message with `[!]` and uses ws::module::style::error. |
+| rainbow | Same as print but prints each object with a random colour.   |
+
+> All of the above functions also have newline variants like: `println` or `errorln` etc.
