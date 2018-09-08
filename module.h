@@ -137,33 +137,39 @@ namespace ws::module {
         // Reset style, BG and FG all at once.
         struct Reset {};
 
-        std::ostream& operator<<(std::ostream& os, const Reset& obj) {
-            return (os << rang::style::reset << rang::fg::reset << rang::bg::reset);
-        }
-
-
-        // Notice style.
+        // Notice style, set bold and notice colour.
         struct Notice {};
 
-        inline std::ostream& operator<<(std::ostream& os, const Notice& obj) {
-            return (os << style::bold << colour::notice);
-        }
-
-
-        // Warn style.
+        // Warn style, set bold and warn colour.
         struct Warn {};
 
-        inline std::ostream& operator<<(std::ostream& os, const Warn& obj) {
-            return (os << style::bold << colour::warn);
-        }
-
-
-        // Error style.
+        // Error style, set bold and error colour.
         struct Error {};
+    }
 
-        inline std::ostream& operator<<(std::ostream& os, const Error& obj) {
-            return (os << style::bold << colour::error);
-        }
+
+
+    // Overloads.
+    inline std::ostream& operator<<(std::ostream& os, const Reset& obj) {
+        return (os << rang::style::reset << rang::fg::reset << rang::bg::reset);
+    }
+
+
+
+    inline std::ostream& operator<<(std::ostream& os, const Notice& obj) {
+        return (os << style::bold << colour::notice);
+    }
+
+
+
+    inline std::ostream& operator<<(std::ostream& os, const Warn& obj) {
+        return (os << style::bold << colour::warn);
+    }
+
+
+
+    inline std::ostream& operator<<(std::ostream& os, const Error& obj) {
+        return (os << style::bold << colour::error);
     }
 
 
@@ -301,7 +307,7 @@ namespace ws::module {
         using colour_t = decltype(colour::fg::bright::black);
 
 
-        inline constexpr colour_t palette[] = {
+        constexpr colour_t palette[] = {
             colour::fg::bright::red,
             colour::fg::bright::green,
             colour::fg::bright::yellow,
