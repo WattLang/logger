@@ -10,6 +10,7 @@
 #include <array>
 #include <utility>
 #include <random>
+#include <iterator>
 
 
 #include "rang/include/rang.hpp"
@@ -150,25 +151,25 @@ namespace ws::module {
 
 
     // Overloads.
-    inline std::ostream& operator<<(std::ostream& os, const Reset& obj) {
+    inline std::ostream& operator<<(std::ostream& os, const details::Reset&) {
         return (os << rang::style::reset << rang::fg::reset << rang::bg::reset);
     }
 
 
 
-    inline std::ostream& operator<<(std::ostream& os, const Notice& obj) {
+    inline std::ostream& operator<<(std::ostream& os, const details::Notice&) {
         return (os << style::bold << colour::notice);
     }
 
 
 
-    inline std::ostream& operator<<(std::ostream& os, const Warn& obj) {
+    inline std::ostream& operator<<(std::ostream& os, const details::Warn&) {
         return (os << style::bold << colour::warn);
     }
 
 
 
-    inline std::ostream& operator<<(std::ostream& os, const Error& obj) {
+    inline std::ostream& operator<<(std::ostream& os, const details::Error&) {
         return (os << style::bold << colour::error);
     }
 
@@ -212,8 +213,8 @@ namespace ws::module {
     template<typename... Ts>
     inline std::ostream& print(Ts&&... args) {
         return (
-            ws::module::printer <<
-                style::reset <<
+            (ws::module::printer <<
+                style::reset) <<
                 ... <<
                 std::forward<Ts&&>(args)
         ) << style::reset;
@@ -304,7 +305,7 @@ namespace ws::module {
 
     // Easter eggs
     namespace details {
-        using colour_t = decltype(colour::fg::bright::black);
+        using colour_t = std::remove_cv_t<decltype(colour::fg::bright::black)>;
 
 
         constexpr colour_t palette[] = {
