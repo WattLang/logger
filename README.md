@@ -85,7 +85,7 @@ int main(int argc, char const *argv[]) {
 }
 ```
 
-#### 4. Colours!
+#### 4. Colours & Styles!
 
 ```cpp
 #include <iostream>
@@ -93,23 +93,123 @@ int main(int argc, char const *argv[]) {
 
 
 int main(int argc, char const *argv[]) {
+    // Indentation.
+    ws::module::println(ws::module::style::bold, "Indentation!");
+
+    ws::module::print(ws::module::tabs(1));
+    ws::module::noticeln(ws::module::tabs(0), "Testing...");
+
+    ws::module::print(ws::module::tabs(1));
+    ws::module::warnln(ws::module::tabs(1),   "Testing...");
+
+    ws::module::print(ws::module::tabs(1));
+    ws::module::errorln(ws::module::tabs(2),  "Testing...");
+
+
+
+
+    // Styles.
+    ws::module::println(ws::module::style::bold, "\nStyles!");
 
     ws::module::println(
-        ws::module::style::bold,
-        ws::module::colour::bg::magenta,
-        "Testing... "
+        ws::module::tabs(1),
+        ws::module::style::notice,
+        "Hello!"
     );
 
+    ws::module::println(
+        ws::module::tabs(1),
+        ws::module::style::warn,
+        "Hello!"
+    );
+
+    ws::module::println(
+        ws::module::tabs(1),
+        ws::module::style::error,
+        "Hello!"
+    );
+
+    ws::module::println(
+        ws::module::tabs(1),
+        ws::module::style::bold,
+        "Hello!"
+    );
+
+    ws::module::println(
+        ws::module::tabs(1),
+        ws::module::style::reverse,
+        "Hello!"
+    );
+
+
+
+
+    // Logging.
+    ws::module::println(ws::module::style::bold, "\nLogging!");
+
+    ws::module::print(ws::module::tabs(1));
     ws::module::noticeln("Notice");
+
+    ws::module::print(ws::module::tabs(1));
     ws::module::warnln("Warn ");
+
+    ws::module::print(ws::module::tabs(1));
     ws::module::errorln("Error ");
 
+
+
+
+    // Colours.
+    ws::module::println(ws::module::style::bold, "\nColours!");
+
     ws::module::println(
-        ws::module::colour::fg::bright::green, "Yes!",
-        " ",
-        ws::module::colour::fg::bright::red, "No!"
+        ws::module::colour::fg::dim::black,   "black",   " ",
+        ws::module::colour::fg::dim::grey,    "grey",    " ",
+        ws::module::colour::fg::dim::red,     "red",     " ",
+        ws::module::colour::fg::dim::yellow,  "yellow",  " ",
+        ws::module::colour::fg::dim::green,   "green",   " ",
+        ws::module::colour::fg::dim::blue,    "blue",    " ",
+        ws::module::colour::fg::dim::magenta, "magenta", " ",
+        ws::module::colour::fg::dim::cyan,    "cyan",    " "
     );
 
+    ws::module::println(
+        ws::module::colour::fg::black,   "black",   " ",
+        ws::module::colour::fg::grey,    "grey",    " ",
+        ws::module::colour::fg::red,     "red",     " ",
+        ws::module::colour::fg::yellow,  "yellow",  " ",
+        ws::module::colour::fg::green,   "green",   " ",
+        ws::module::colour::fg::blue,    "blue",    " ",
+        ws::module::colour::fg::magenta, "magenta", " ",
+        ws::module::colour::fg::cyan,    "cyan",    " "
+    );
+
+    ws::module::println(
+        ws::module::colour::fg::bright::black,   "black",   " ",
+        ws::module::colour::fg::bright::grey,    "grey",    " ",
+        ws::module::colour::fg::bright::red,     "red",     " ",
+        ws::module::colour::fg::bright::yellow,  "yellow",  " ",
+        ws::module::colour::fg::bright::green,   "green",   " ",
+        ws::module::colour::fg::bright::blue,    "blue",    " ",
+        ws::module::colour::fg::bright::magenta, "magenta", " ",
+        ws::module::colour::fg::bright::cyan,    "cyan",    " "
+    );
+
+
+
+
+    // Lines, Tabs and Spaces.
+    ws::module::println(ws::module::style::bold, "\nFormatting!");
+    ws::module::println(ws::module::tabs(1), "Tabs!");
+    ws::module::println(ws::module::spaces(1), "Spaces!");
+    ws::module::println(ws::module::lines(1), "Lines!");
+    ws::module::println(ws::module::repeat(5, '>'), "Repeated chars!");
+
+
+
+
+    // Rainbows.
+    ws::module::println(ws::module::style::bold, "\nRainbows!");
     ws::module::rainbowln("Hello ", "how ", "are ", "you?");
 
     return 0;
@@ -159,7 +259,7 @@ int main(int argc, char const *argv[]) {
 | cyan    | Also flowers.                                            |
 | grey    | All fifty shades of it.                                  |
 
-> All of the above colours exist in `fg::`, `bg::`, `fg::bright::` and `bg::bright::`.
+> All of the above colours exist in `fg::`, `bg::`, `fg::bright::`, `bg::bright::`, `fg::dim::` and `bg::dim::`.
 
 | Special Colours | ws::module::colour::        |
 | --------------- | --------------------------- |
@@ -184,3 +284,11 @@ int main(int argc, char const *argv[]) {
 | rainbow | Same as print but prints each object with a random colour.   |
 
 > All of the above functions also have newline variants like: `println` or `errorln` etc.
+
+| Utility | ws::module::                                  |
+| ------- | --------------------------------------------- |
+| repeat  | Generate a string of N sequential characters. |
+| spaces  | Generate a string of N spaces.                |
+| tabs    | Generate a string of N tabs.                  |
+| lines   | Generate a string of N newlines.              |
+
