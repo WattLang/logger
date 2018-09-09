@@ -24,9 +24,13 @@ namespace ws::module {
 
 
     // Utility functions
-    inline std::string repeat(char c, unsigned n) {
-        return std::string(n, c);
+    namespace details {
+        // unsafe, can be called like: repeat(5, 'n') or repeat('n', 5)
+        inline std::string repeat(char c, unsigned n) {
+            return std::string(n, c);
+        }
     }
+
 
 
     // std::string constructor does not allow repeating a string so
@@ -41,17 +45,17 @@ namespace ws::module {
 
 
     inline std::string spaces(unsigned n) {
-        return ws::module::repeat(' ', n);
+        return ws::module::details::repeat(' ', n);
     }
 
 
     inline std::string tabs(unsigned n) {
-        return ws::module::repeat('\t', n);
+        return ws::module::details::repeat('\t', n);
     }
 
 
     inline std::string lines(unsigned n) {
-        return ws::module::repeat('\n', n);
+        return ws::module::details::repeat('\n', n);
     }
 
 

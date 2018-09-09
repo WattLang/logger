@@ -2,6 +2,8 @@
 
 A simple header for making the task of piping data between processes easier.
 
+![demo](pic.png)
+
 ## Examples
 
 #### 1. Processing streamed data
@@ -203,7 +205,7 @@ int main(int argc, char const *argv[]) {
     ws::module::println(ws::module::tabs(1), "Tabs!");
     ws::module::println(ws::module::spaces(1), "Spaces!");
     ws::module::println(ws::module::lines(1), "Lines!");
-    ws::module::println(ws::module::repeat(5, '>'), "Repeated chars!");
+    ws::module::println(ws::module::repeat(">", 5), "Repeated chars!");
 
 
 
