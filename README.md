@@ -78,6 +78,9 @@ int main(int argc, char const *argv[]) {
     ws::module::error("Error ", 1, "\n");
     ws::module::errorln("Error ", 2);
 
+    ws::module::success("Success ", 1, "\n");
+    ws::module::successln("Success ", 2);
+
     ws::module::print("Yes!") << " " << "No!" << std::endl;
 
     ws::module::printer << "Printer\n";
@@ -107,6 +110,9 @@ int main(int argc, char const *argv[]) {
     ws::module::print(ws::module::tabs(1));
     ws::module::errorln(ws::module::tabs(2),  "Testing...");
 
+    ws::module::print(ws::module::tabs(1));
+    ws::module::successln(ws::module::tabs(2),  "Testing...");
+
 
 
 
@@ -128,6 +134,12 @@ int main(int argc, char const *argv[]) {
     ws::module::println(
         ws::module::tabs(1),
         ws::module::style::error,
+        "Hello!"
+    );
+
+    ws::module::println(
+        ws::module::tabs(1),
+        ws::module::style::success,
         "Hello!"
     );
 
@@ -157,6 +169,9 @@ int main(int argc, char const *argv[]) {
 
     ws::module::print(ws::module::tabs(1));
     ws::module::errorln("Error ");
+
+    ws::module::print(ws::module::tabs(1));
+    ws::module::successln("Error ");
 
 
 
@@ -268,6 +283,7 @@ int main(int argc, char const *argv[]) {
 | notice          | Colour to use for notices.  |
 | warn            | Colour to use for warnings. |
 | error           | Colour to use for errors.   |
+| success         | Colour to use for success.  |
 
 #### Functions.
 
@@ -283,6 +299,7 @@ int main(int argc, char const *argv[]) {
 | notice  | Same as print but prepends message with `[-]` and uses ws::module::style::notice. |
 | warn    | Same as print but prepends message with `[*]` and uses ws::module::style::warn. |
 | error   | Same as print but prepends message with `[!]` and uses ws::module::style::error. |
+| success | Same as print but prepends message with `[^]` and uses ws::module::style::success. |
 | rainbow | Same as print but prints each object with a random colour.   |
 
 > All of the above functions also have newline variants like: `println` or `errorln` etc.
