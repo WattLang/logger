@@ -24,23 +24,34 @@ namespace ws::module {
 
 
     // Utility functions
-    std::string repeat(const std::string& c, unsigned n) {
+    inline std::string repeat(char c, unsigned n) {
         return std::string(n, c);
     }
 
 
-    std::string spaces(unsigned n) {
-        return ws::module::repeat(" ", n);
+    // std::string constructor does not allow repeating a string so
+    // this function implements it.
+    inline std::string repeat(const std::string& c, unsigned n) {
+        std::string out = c;
+
+        for (n--; n > 0; n--) out += c;
+
+        return out;
     }
 
 
-    std::string tabs(unsigned n) {
-        return ws::module::repeat("\t", n);
+    inline std::string spaces(unsigned n) {
+        return ws::module::repeat(' ', n);
     }
 
 
-    std::string lines(unsigned n) {
-        return ws::module::repeat("\n", n);
+    inline std::string tabs(unsigned n) {
+        return ws::module::repeat('\t', n);
+    }
+
+
+    inline std::string lines(unsigned n) {
+        return ws::module::repeat('\n', n);
     }
 
 
@@ -48,10 +59,10 @@ namespace ws::module {
     // Receive data in chunks.
     // Callback = (const std::string& buffer, int chunk_id, bool eof);
     inline void receive(
-        uintmax_t buffer_size,
+        std::streamsize buffer_size,
         std::function<void(const std::string&, int, bool)> callback
     ) {
-        std::string buffer(buffer_size, '\0');
+        std::string buffer(static_cast<uintmax_t>(buffer_size), '\0');
         int packet_id = 0;
 
 
@@ -68,7 +79,7 @@ namespace ws::module {
 
 
     // Accumulate all data and return a single string.
-    inline std::string receive_all(uintmax_t buffer_size) {
+    inline std::string receive_all(std::streamsize buffer_size) {
         std::string accumulator;
 
 
@@ -92,58 +103,58 @@ namespace ws::module {
     // Colours.
     namespace colour {
         namespace fg {
-            NEW_COLOUR(black,   rang::fg::black);
-            NEW_COLOUR(red,     rang::fg::red);
-            NEW_COLOUR(green,   rang::fg::green);
-            NEW_COLOUR(yellow,  rang::fg::yellow);
-            NEW_COLOUR(blue,    rang::fg::blue);
-            NEW_COLOUR(magenta, rang::fg::magenta);
-            NEW_COLOUR(cyan,    rang::fg::cyan);
-            NEW_COLOUR(grey,    rang::fg::gray);
-            NEW_COLOUR(normal,  rang::fg::reset);
+            NEW_COLOUR(black,   rang::fg::black)
+            NEW_COLOUR(red,     rang::fg::red)
+            NEW_COLOUR(green,   rang::fg::green)
+            NEW_COLOUR(yellow,  rang::fg::yellow)
+            NEW_COLOUR(blue,    rang::fg::blue)
+            NEW_COLOUR(magenta, rang::fg::magenta)
+            NEW_COLOUR(cyan,    rang::fg::cyan)
+            NEW_COLOUR(grey,    rang::fg::gray)
+            NEW_COLOUR(normal,  rang::fg::reset)
 
             namespace bright {
-                NEW_COLOUR(black,   rang::fgB::black);
-                NEW_COLOUR(red,     rang::fgB::red);
-                NEW_COLOUR(green,   rang::fgB::green);
-                NEW_COLOUR(yellow,  rang::fgB::yellow);
-                NEW_COLOUR(blue,    rang::fgB::blue);
-                NEW_COLOUR(magenta, rang::fgB::magenta);
-                NEW_COLOUR(cyan,    rang::fgB::cyan);
-                NEW_COLOUR(grey,    rang::fgB::gray);
-                NEW_COLOUR(normal,  rang::fg::reset);
+                NEW_COLOUR(black,   rang::fgB::black)
+                NEW_COLOUR(red,     rang::fgB::red)
+                NEW_COLOUR(green,   rang::fgB::green)
+                NEW_COLOUR(yellow,  rang::fgB::yellow)
+                NEW_COLOUR(blue,    rang::fgB::blue)
+                NEW_COLOUR(magenta, rang::fgB::magenta)
+                NEW_COLOUR(cyan,    rang::fgB::cyan)
+                NEW_COLOUR(grey,    rang::fgB::gray)
+                NEW_COLOUR(normal,  rang::fg::reset)
             }
         }
 
 
         namespace bg {
-            NEW_COLOUR(black,   rang::bg::black);
-            NEW_COLOUR(red,     rang::bg::red);
-            NEW_COLOUR(green,   rang::bg::green);
-            NEW_COLOUR(yellow,  rang::bg::yellow);
-            NEW_COLOUR(blue,    rang::bg::blue);
-            NEW_COLOUR(magenta, rang::bg::magenta);
-            NEW_COLOUR(cyan,    rang::bg::cyan);
-            NEW_COLOUR(grey,    rang::bg::gray);
-            NEW_COLOUR(normal,  rang::bg::reset);
+            NEW_COLOUR(black,   rang::bg::black)
+            NEW_COLOUR(red,     rang::bg::red)
+            NEW_COLOUR(green,   rang::bg::green)
+            NEW_COLOUR(yellow,  rang::bg::yellow)
+            NEW_COLOUR(blue,    rang::bg::blue)
+            NEW_COLOUR(magenta, rang::bg::magenta)
+            NEW_COLOUR(cyan,    rang::bg::cyan)
+            NEW_COLOUR(grey,    rang::bg::gray)
+            NEW_COLOUR(normal,  rang::bg::reset)
 
             namespace bright {
-                NEW_COLOUR(black,   rang::bgB::black);
-                NEW_COLOUR(red,     rang::bgB::red);
-                NEW_COLOUR(green,   rang::bgB::green);
-                NEW_COLOUR(yellow,  rang::bgB::yellow);
-                NEW_COLOUR(blue,    rang::bgB::blue);
-                NEW_COLOUR(magenta, rang::bgB::magenta);
-                NEW_COLOUR(cyan,    rang::bgB::cyan);
-                NEW_COLOUR(grey,    rang::bgB::gray);
-                NEW_COLOUR(normal,  rang::bg::reset);
+                NEW_COLOUR(black,   rang::bgB::black)
+                NEW_COLOUR(red,     rang::bgB::red)
+                NEW_COLOUR(green,   rang::bgB::green)
+                NEW_COLOUR(yellow,  rang::bgB::yellow)
+                NEW_COLOUR(blue,    rang::bgB::blue)
+                NEW_COLOUR(magenta, rang::bgB::magenta)
+                NEW_COLOUR(cyan,    rang::bgB::cyan)
+                NEW_COLOUR(grey,    rang::bgB::gray)
+                NEW_COLOUR(normal,  rang::bg::reset)
             }
         }
 
 
-        NEW_COLOUR(notice, fg::bright::blue);
-        NEW_COLOUR(warn,   fg::bright::yellow);
-        NEW_COLOUR(error,  fg::bright::red);
+        NEW_COLOUR(notice, fg::bright::blue)
+        NEW_COLOUR(warn,   fg::bright::yellow)
+        NEW_COLOUR(error,  fg::bright::red)
     }
 
 
@@ -187,27 +198,27 @@ namespace ws::module {
 
     namespace colour {
         namespace fg::dim {
-            NEW_COLOUR(black,   details::DimFG{colour::fg::black});
-            NEW_COLOUR(red,     details::DimFG{colour::fg::red});
-            NEW_COLOUR(green,   details::DimFG{colour::fg::green});
-            NEW_COLOUR(yellow,  details::DimFG{colour::fg::yellow});
-            NEW_COLOUR(blue,    details::DimFG{colour::fg::blue});
-            NEW_COLOUR(magenta, details::DimFG{colour::fg::magenta});
-            NEW_COLOUR(cyan,    details::DimFG{colour::fg::cyan});
-            NEW_COLOUR(grey,    details::DimFG{colour::fg::grey});
-            NEW_COLOUR(normal,  rang::style::reset);
+            NEW_COLOUR(black,   details::DimFG{colour::fg::black})
+            NEW_COLOUR(red,     details::DimFG{colour::fg::red})
+            NEW_COLOUR(green,   details::DimFG{colour::fg::green})
+            NEW_COLOUR(yellow,  details::DimFG{colour::fg::yellow})
+            NEW_COLOUR(blue,    details::DimFG{colour::fg::blue})
+            NEW_COLOUR(magenta, details::DimFG{colour::fg::magenta})
+            NEW_COLOUR(cyan,    details::DimFG{colour::fg::cyan})
+            NEW_COLOUR(grey,    details::DimFG{colour::fg::grey})
+            NEW_COLOUR(normal,  rang::style::reset)
         }
 
         namespace bg::dim {
-            NEW_COLOUR(black,   details::DimBG{colour::bg::black});
-            NEW_COLOUR(red,     details::DimBG{colour::bg::red});
-            NEW_COLOUR(green,   details::DimBG{colour::bg::green});
-            NEW_COLOUR(yellow,  details::DimBG{colour::bg::yellow});
-            NEW_COLOUR(blue,    details::DimBG{colour::bg::blue});
-            NEW_COLOUR(magenta, details::DimBG{colour::bg::magenta});
-            NEW_COLOUR(cyan,    details::DimBG{colour::bg::cyan});
-            NEW_COLOUR(grey,    details::DimBG{colour::bg::grey});
-            NEW_COLOUR(normal,  rang::style::reset);
+            NEW_COLOUR(black,   details::DimBG{colour::bg::black})
+            NEW_COLOUR(red,     details::DimBG{colour::bg::red})
+            NEW_COLOUR(green,   details::DimBG{colour::bg::green})
+            NEW_COLOUR(yellow,  details::DimBG{colour::bg::yellow})
+            NEW_COLOUR(blue,    details::DimBG{colour::bg::blue})
+            NEW_COLOUR(magenta, details::DimBG{colour::bg::magenta})
+            NEW_COLOUR(cyan,    details::DimBG{colour::bg::cyan})
+            NEW_COLOUR(grey,    details::DimBG{colour::bg::grey})
+            NEW_COLOUR(normal,  rang::style::reset)
         }
     }
 
@@ -231,7 +242,7 @@ namespace ws::module {
 
 
     inline std::ostream& operator<<(
-        std::ostream& os, const details::DimBG&
+        std::ostream& os, const details::DimBG& obj
     ) {
         return (os << rang::style::dim << obj.colour);
     }

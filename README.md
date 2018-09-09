@@ -96,14 +96,14 @@ int main(int argc, char const *argv[]) {
     // Indentation.
     ws::module::println(ws::module::style::bold, "Indentation!");
 
-    ws::module::print(ws::module::indent(1));
-    ws::module::noticeln(ws::module::indent(0), "Testing...");
+    ws::module::print(ws::module::tabs(1));
+    ws::module::noticeln(ws::module::tabs(0), "Testing...");
 
-    ws::module::print(ws::module::indent(1));
-    ws::module::warnln(ws::module::indent(1),   "Testing...");
+    ws::module::print(ws::module::tabs(1));
+    ws::module::warnln(ws::module::tabs(1),   "Testing...");
 
-    ws::module::print(ws::module::indent(1));
-    ws::module::errorln(ws::module::indent(2),  "Testing...");
+    ws::module::print(ws::module::tabs(1));
+    ws::module::errorln(ws::module::tabs(2),  "Testing...");
 
 
 
@@ -112,31 +112,31 @@ int main(int argc, char const *argv[]) {
     ws::module::println(ws::module::style::bold, "\nStyles!");
 
     ws::module::println(
-        ws::module::indent(1),
+        ws::module::tabs(1),
         ws::module::style::notice,
         "Hello!"
     );
 
     ws::module::println(
-        ws::module::indent(1),
+        ws::module::tabs(1),
         ws::module::style::warn,
         "Hello!"
     );
 
     ws::module::println(
-        ws::module::indent(1),
+        ws::module::tabs(1),
         ws::module::style::error,
         "Hello!"
     );
 
     ws::module::println(
-        ws::module::indent(1),
+        ws::module::tabs(1),
         ws::module::style::bold,
         "Hello!"
     );
 
     ws::module::println(
-        ws::module::indent(1),
+        ws::module::tabs(1),
         ws::module::style::reverse,
         "Hello!"
     );
@@ -147,13 +147,13 @@ int main(int argc, char const *argv[]) {
     // Logging.
     ws::module::println(ws::module::style::bold, "\nLogging!");
 
-    ws::module::print(ws::module::indent(1));
+    ws::module::print(ws::module::tabs(1));
     ws::module::noticeln("Notice");
 
-    ws::module::print(ws::module::indent(1));
+    ws::module::print(ws::module::tabs(1));
     ws::module::warnln("Warn ");
 
-    ws::module::print(ws::module::indent(1));
+    ws::module::print(ws::module::tabs(1));
     ws::module::errorln("Error ");
 
 
