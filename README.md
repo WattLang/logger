@@ -201,7 +201,6 @@ int main(int argc, char const *argv[]) {
     // Lines, Tabs and Spaces.
     ws::module::println(ws::module::style::bold, "\nFormatting!");
     ws::module::println(ws::module::tabs(1), "Tabs!");
-    ws::module::println(ws::module::indent(1), "Tabs!");
     ws::module::println(ws::module::spaces(1), "Spaces!");
     ws::module::println(ws::module::lines(1), "Lines!");
     ws::module::println(ws::module::repeat(5, '>'), "Repeated chars!");
