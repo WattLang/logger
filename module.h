@@ -23,26 +23,23 @@ namespace ws::module {
 
 
     // Utility functions
-    std::string repeat(int n, char c) {
+    std::string repeat(const std::string& c, unsigned n) {
         return std::string(n, c);
     }
 
 
-    std::string spaces(int n) {
-        return ws::module::repeat(n, ' ');
+    std::string spaces(unsigned n) {
+        return ws::module::repeat(" ", n);
     }
 
 
-    std::string tabs(int n) {
-        return ws::module::repeat(n, '\t');
+    std::string tabs(unsigned n) {
+        return ws::module::repeat("\t", n);
     }
 
 
-    constexpr auto indent = ws::module::tabs;
-
-
-    std::string lines(int n) {
-        return ws::module::repeat(n, '\n');
+    std::string lines(unsigned n) {
+        return ws::module::repeat("\n", n);
     }
 
 

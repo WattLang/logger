@@ -291,6 +291,5 @@ int main(int argc, char const *argv[]) {
 | repeat  | Generate a string of N sequential characters. |
 | spaces  | Generate a string of N spaces.                |
 | tabs    | Generate a string of N tabs.                  |
-| indent  | Alias for tabs.                               |
 | lines   | Generate a string of N newlines.              |
 
