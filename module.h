@@ -159,6 +159,7 @@ namespace ws::module {
         NEW_COLOUR(notice, fg::bright::blue)
         NEW_COLOUR(warn,   fg::bright::yellow)
         NEW_COLOUR(error,  fg::bright::red)
+        NEW_COLOUR(success,  fg::bright::green)
     }
 
 
@@ -196,6 +197,9 @@ namespace ws::module {
 
         // Error style, set bold and error colour.
         struct Error {};
+
+        // Success style, set bold and success colour.
+        struct Success {};
     }
 
 
@@ -277,12 +281,21 @@ namespace ws::module {
 
 
 
+    inline std::ostream& operator<<(
+        std::ostream& os, const details::Success&
+    ) {
+        return (os << style::bold << colour::success);
+    }
+
+
+
     // Custom styles
     namespace style {
         inline details::Reset reset;
         inline details::Notice notice;
         inline details::Warn warn;
         inline details::Error error;
+        inline details::Success success;
     }
 
 
@@ -293,6 +306,7 @@ namespace ws::module {
             constexpr auto notice = "[-] ";
             constexpr auto warn   = "[*] ";
             constexpr auto error  = "[!] ";
+            constexpr auto success  = "[^] ";
         }
     }
 
@@ -376,6 +390,14 @@ namespace ws::module {
 
 
 
+    template <typename... Ts>
+    inline std::ostream& success(Ts&&... args) {
+        ws::module::print(style::success, details::symbol::success);
+        return ws::module::print(std::forward<Ts&&>(args)...);
+    }
+
+
+
     // Print lines too.
     template <typename... Ts>
     inline std::ostream& noticeln(Ts&&... args) {
@@ -394,6 +416,13 @@ namespace ws::module {
     template <typename... Ts>
     inline std::ostream& errorln(Ts&&... args) {
         return ws::module::error(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+    template <typename... Ts>
+    inline std::ostream& successln(Ts&&... args) {
+        return ws::module::success(std::forward<Ts&&>(args)..., '\n');
     }
 
 
