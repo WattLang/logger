@@ -156,9 +156,10 @@ namespace ws::module {
         }
 
 
-        NEW_COLOUR(notice, fg::bright::blue)
-        NEW_COLOUR(warn,   fg::bright::yellow)
-        NEW_COLOUR(error,  fg::bright::red)
+        NEW_COLOUR(notice,  fg::bright::blue)
+        NEW_COLOUR(warn,    fg::bright::yellow)
+        NEW_COLOUR(error,   fg::bright::red)
+        NEW_COLOUR(success, fg::bright::green)
     }
 
 
@@ -196,6 +197,9 @@ namespace ws::module {
 
         // Error style, set bold and error colour.
         struct Error {};
+
+        // Success style, set bold and success colour.
+        struct Success {};
     }
 
 
@@ -277,12 +281,21 @@ namespace ws::module {
 
 
 
+    inline std::ostream& operator<<(
+        std::ostream& os, const details::Success&
+    ) {
+        return (os << style::bold << colour::success);
+    }
+
+
+
     // Custom styles
     namespace style {
         inline details::Reset reset;
         inline details::Notice notice;
         inline details::Warn warn;
         inline details::Error error;
+        inline details::Success success;
     }
 
 
@@ -290,9 +303,10 @@ namespace ws::module {
     // Output symbols
     namespace details {
         namespace symbol {
-            constexpr auto notice = "[-] ";
-            constexpr auto warn   = "[*] ";
-            constexpr auto error  = "[!] ";
+            constexpr auto notice  = "[-] ";
+            constexpr auto warn    = "[*] ";
+            constexpr auto error   = "[!] ";
+            constexpr auto success = "[^] ";
         }
     }
 
@@ -376,6 +390,14 @@ namespace ws::module {
 
 
 
+    template <typename... Ts>
+    inline std::ostream& success(Ts&&... args) {
+        ws::module::print(style::success, details::symbol::success);
+        return ws::module::print(std::forward<Ts&&>(args)...);
+    }
+
+
+
     // Print lines too.
     template <typename... Ts>
     inline std::ostream& noticeln(Ts&&... args) {
@@ -394,6 +416,13 @@ namespace ws::module {
     template <typename... Ts>
     inline std::ostream& errorln(Ts&&... args) {
         return ws::module::error(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+    template <typename... Ts>
+    inline std::ostream& successln(Ts&&... args) {
+        return ws::module::success(std::forward<Ts&&>(args)..., '\n');
     }
 
 
@@ -431,25 +460,16 @@ namespace ws::module {
 
 
 
-    template <typename T>
-    inline std::ostream& rainbow(T&& arg) {
+    template <typename...Ts>
+    inline std::ostream& rainbow(Ts&&... arg) {
         std::stringstream ss;
-        ss << arg;
+        (ss << ... << arg);
 
         for (const auto& chr: ss.str())
             ws::module::print(details::random_colour(), chr);
 
         return ws::module::printer;
     }
-
-
-
-    template <typename T1, typename T2, typename... Ts>
-    inline std::ostream& rainbow(T1 arg1, T2 arg2, Ts&&... args) {
-        ws::module::rainbow(arg1);
-        return ws::module::rainbow(arg2, std::forward<Ts&&>(args)...);
-    }
-
 
 
     template <typename... Ts>
