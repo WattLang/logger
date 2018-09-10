@@ -171,7 +171,7 @@ int main(int argc, char const *argv[]) {
     ws::module::errorln("Error ");
 
     ws::module::print(ws::module::tabs(1));
-    ws::module::successln("Error ");
+    ws::module::successln("Success ");
 
 
 
