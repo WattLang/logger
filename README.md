@@ -205,7 +205,7 @@ int main(int argc, char const *argv[]) {
     ws::module::println(ws::module::tabs(1), "Tabs!");
     ws::module::println(ws::module::spaces(1), "Spaces!");
     ws::module::println(ws::module::lines(1), "Lines!");
-    ws::module::println(ws::module::repeat(">", 5), "Repeated chars!");
+    ws::module::println(ws::module::repeat(">", 5), "Repeated string!");
 
 
 
@@ -289,7 +289,7 @@ int main(int argc, char const *argv[]) {
 
 | Utility | ws::module::                                  |
 | ------- | --------------------------------------------- |
-| repeat  | Generate a string of N sequential characters. |
+| repeat  | Generate a string of N sequential strings.    |
 | spaces  | Generate a string of N spaces.                |
 | tabs    | Generate a string of N tabs.                  |
 | lines   | Generate a string of N newlines.              |
