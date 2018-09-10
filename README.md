@@ -102,16 +102,16 @@ int main(int argc, char const *argv[]) {
     ws::module::println(ws::module::style::bold, "Indentation!");
 
     ws::module::print(ws::module::tabs(1));
-    ws::module::noticeln(ws::module::tabs(0), "Testing...");
+    ws::module::noticeln(ws::module::spaces(0), "Testing...");
 
     ws::module::print(ws::module::tabs(1));
-    ws::module::warnln(ws::module::tabs(1),   "Testing...");
+    ws::module::warnln(ws::module::spaces(1),   "Testing...");
 
     ws::module::print(ws::module::tabs(1));
-    ws::module::errorln(ws::module::tabs(2),  "Testing...");
+    ws::module::errorln(ws::module::spaces(2),  "Testing...");
 
     ws::module::print(ws::module::tabs(1));
-    ws::module::successln(ws::module::tabs(2),  "Testing...");
+    ws::module::successln(ws::module::spaces(3),  "Testing...");
 
 
 
