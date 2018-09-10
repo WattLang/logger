@@ -156,10 +156,10 @@ namespace ws::module {
         }
 
 
-        NEW_COLOUR(notice, fg::bright::blue)
-        NEW_COLOUR(warn,   fg::bright::yellow)
-        NEW_COLOUR(error,  fg::bright::red)
-        NEW_COLOUR(success,  fg::bright::green)
+        NEW_COLOUR(notice,  fg::bright::blue)
+        NEW_COLOUR(warn,    fg::bright::yellow)
+        NEW_COLOUR(error,   fg::bright::red)
+        NEW_COLOUR(success, fg::bright::green)
     }
 
 
@@ -303,10 +303,10 @@ namespace ws::module {
     // Output symbols
     namespace details {
         namespace symbol {
-            constexpr auto notice = "[-] ";
-            constexpr auto warn   = "[*] ";
-            constexpr auto error  = "[!] ";
-            constexpr auto success  = "[^] ";
+            constexpr auto notice  = "[-] ";
+            constexpr auto warn    = "[*] ";
+            constexpr auto error   = "[!] ";
+            constexpr auto success = "[^] ";
         }
     }
 
