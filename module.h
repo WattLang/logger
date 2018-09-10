@@ -460,25 +460,16 @@ namespace ws::module {
 
 
 
-    template <typename T>
-    inline std::ostream& rainbow(T&& arg) {
+    template <typename...Ts>
+    inline std::ostream& rainbow(Ts&&... arg) {
         std::stringstream ss;
-        ss << arg;
+        (ss << ... << arg);
 
         for (const auto& chr: ss.str())
             ws::module::print(details::random_colour(), chr);
 
         return ws::module::printer;
     }
-
-
-
-    template <typename T1, typename T2, typename... Ts>
-    inline std::ostream& rainbow(T1 arg1, T2 arg2, Ts&&... args) {
-        ws::module::rainbow(arg1);
-        return ws::module::rainbow(arg2, std::forward<Ts&&>(args)...);
-    }
-
 
 
     template <typename... Ts>
