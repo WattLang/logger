@@ -200,6 +200,63 @@ namespace ws::module {
 
         // Success style, set bold and success colour.
         struct Success {};
+
+
+
+        // Overloads.
+        inline std::ostream& operator<<(
+            std::ostream& os, const Reset&
+        ) {
+            return (os << rang::style::reset << rang::fg::reset << rang::bg::reset);
+        }
+
+
+
+        inline std::ostream& operator<<(
+            std::ostream& os, const DimFG& obj
+        ) {
+            return (os << rang::style::dim << obj.colour);
+        }
+
+
+
+        inline std::ostream& operator<<(
+            std::ostream& os, const DimBG& obj
+        ) {
+            return (os << rang::style::dim << obj.colour);
+        }
+
+
+
+        inline std::ostream& operator<<(
+            std::ostream& os, const Notice&
+        ) {
+            return (os << style::bold << colour::notice);
+        }
+
+
+
+        inline std::ostream& operator<<(
+            std::ostream& os, const Warn&
+        ) {
+            return (os << style::bold << colour::warn);
+        }
+
+
+
+        inline std::ostream& operator<<(
+            std::ostream& os, const Error&
+        ) {
+            return (os << style::bold << colour::error);
+        }
+
+
+
+        inline std::ostream& operator<<(
+            std::ostream& os, const Success&
+        ) {
+            return (os << style::bold << colour::success);
+        }
     }
 
 
@@ -228,63 +285,6 @@ namespace ws::module {
             NEW_COLOUR(grey,    details::DimBG{colour::bg::grey})
             NEW_COLOUR(normal,  rang::style::reset)
         }
-    }
-
-
-
-    // Overloads.
-    inline std::ostream& operator<<(
-        std::ostream& os, const details::Reset&
-    ) {
-        return (os << rang::style::reset << rang::fg::reset << rang::bg::reset);
-    }
-
-
-
-    inline std::ostream& operator<<(
-        std::ostream& os, const details::DimFG& obj
-    ) {
-        return (os << rang::style::dim << obj.colour);
-    }
-
-
-
-    inline std::ostream& operator<<(
-        std::ostream& os, const details::DimBG& obj
-    ) {
-        return (os << rang::style::dim << obj.colour);
-    }
-
-
-
-    inline std::ostream& operator<<(
-        std::ostream& os, const details::Notice&
-    ) {
-        return (os << style::bold << colour::notice);
-    }
-
-
-
-    inline std::ostream& operator<<(
-        std::ostream& os, const details::Warn&
-    ) {
-        return (os << style::bold << colour::warn);
-    }
-
-
-
-    inline std::ostream& operator<<(
-        std::ostream& os, const details::Error&
-    ) {
-        return (os << style::bold << colour::error);
-    }
-
-
-
-    inline std::ostream& operator<<(
-        std::ostream& os, const details::Success&
-    ) {
-        return (os << style::bold << colour::success);
     }
 
 
