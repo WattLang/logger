@@ -12,6 +12,7 @@
 #include <random>
 #include <sstream>
 #include <iterator>
+#include <cstdint>
 
 
 #include "rang/include/rang.hpp"
@@ -475,6 +476,55 @@ namespace ws::module {
     template <typename... Ts>
     inline std::ostream& rainbowln(Ts&&... args) {
         return ws::module::rainbow(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+    struct Token {
+        std::string content;
+        std::uint32_t type;
+        std::uint64_t line;
+        std::uint64_t column;
+    };
+
+    /*
+        8 bytes: content's size
+        <size> bytes: content
+        4 bytes: type
+        8 bytes: line
+        8 bytes: column
+    */
+    inline std::ostream& serialize(std::ostream& os, Token const& token) {
+        std::size_t size = token.content.size();
+        os.write(reinterpret_cast<const char*>(&size               ), sizeof(size        ));
+        os.write(                               token.content.data(),        size         );
+        os.write(reinterpret_cast<const char*>(&token.type         ), sizeof(token.type  ));
+        os.write(reinterpret_cast<const char*>(&token.line         ), sizeof(token.line  ));
+        os.write(reinterpret_cast<const char*>(&token.column       ), sizeof(token.column));
+        return os;
+    }
+
+    inline std::istream& deserialize(std::istream& is, Token& token) {
+        auto read = [] (std::istream& is, auto* prop, std::streamsize size) {
+            if (is.readsome(reinterpret_cast<char*>(prop), size) != size) {
+                is.setstate(std::ios::failbit);
+                return false;
+            }
+            return true;
+        };
+        is.clear(); // remove flags
+
+        std::size_t size;
+        if (!read(is, &size, sizeof(size)))
+            return is;
+
+        token.content.resize(size);
+        read(is, token.content.data(), size                ) && 
+        read(is, &token.type,          sizeof(token.type  )) && 
+        read(is, &token.line,          sizeof(token.line  )) && 
+        read(is, &token.column,        sizeof(token.column));
+
+        return is;
     }
 
 
