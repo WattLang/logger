@@ -12,6 +12,7 @@
 #include <random>
 #include <sstream>
 #include <iterator>
+#include <cstdint>
 
 
 #include "rang/include/rang.hpp"
