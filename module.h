@@ -71,11 +71,38 @@ namespace ws::module {
 
 
 
+    namespace details {
+        constexpr auto DEFAULT_BUFFER_SIZE = 32;
+
+        using bool_str = std::tuple<std::string, bool>;
+    }
+
+
+
+    inline details::bool_str receive_one(
+        std::streamsize buffer_size = details::DEFAULT_BUFFER_SIZE
+    ) {
+        std::string buffer(static_cast<uintmax_t>(buffer_size), '\0');
+
+
+        if (std::cin.read(&buffer[0], buffer_size))
+            return std::make_tuple(buffer, false); // EOF = false;
+
+
+        // Cleanup trailing garbage.
+        buffer.erase(buffer.begin() + std::cin.gcount(), buffer.end());
+
+        // EOF = true;
+        return std::make_tuple(buffer, true);
+    }
+
+
+
     // Receive data in chunks.
     // Callback = (const std::string& buffer, int chunk_id, bool eof);
     inline void receive(
-        std::streamsize buffer_size,
-        std::function<void(const std::string&, int, bool)> callback
+        std::function<void(const std::string&, int, bool)> callback,
+        std::streamsize buffer_size = details::DEFAULT_BUFFER_SIZE
     ) {
         std::string buffer(static_cast<uintmax_t>(buffer_size), '\0');
         int packet_id = 0;
@@ -94,17 +121,20 @@ namespace ws::module {
 
 
     // Accumulate all data and return a single string.
-    inline std::string receive_all(std::streamsize buffer_size) {
+    inline std::string receive_all(
+        std::streamsize buffer_size = details::DEFAULT_BUFFER_SIZE
+    ) {
         std::string accumulator;
 
 
-        receive(
-            buffer_size,
+        while (true) {
+            auto&& [buffer, eof] = ws::module::receive_one(buffer_size);
 
-            [&] (const std::string& buffer, int, bool) {
-                accumulator += buffer;
-            }
-        );
+            accumulator += buffer;
+
+            if (eof)
+                break;
+        }
 
 
         return accumulator;
