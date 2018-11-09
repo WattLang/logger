@@ -2,12 +2,13 @@
 
 
 #include <cstdint>
-#include <iostream>
 #include <string>
 
 
 namespace ws::token {
     using type_t = std::uint16_t;
+
+
 
 
     struct Token {
@@ -38,6 +39,7 @@ namespace ws::token {
 
 
 
+
     inline std::ostream& operator<<(std::ostream& os, const Token& tok) {
         const auto& [type, line, column, content] = tok;
 
@@ -45,6 +47,5 @@ namespace ws::token {
 
         return os;
     }
-
 
 }

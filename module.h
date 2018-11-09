@@ -18,6 +18,16 @@
 #include "rang/include/rang.hpp"
 
 
+
+/*
+    Macros and constants:
+
+    WS_MODULE_LOG_OFF: disables all logging.
+    WS_MODULE_PIPE_OFF: disables all piping.
+*/
+
+
+
 namespace ws::module {
     // Macros
     #define NEW_COLOUR(name, val) constexpr auto name = val;
@@ -100,6 +110,16 @@ namespace ws::module {
         return accumulator;
     }
 
+
+
+
+
+
+    // Wrappers to help implement compile time checks for compiling code.
+    template <bool B, typename F>
+    constexpr void run_if(F&& func) {
+        if constexpr(B) std::forward<F>(func)();
+    }
 
 
 
@@ -328,19 +348,31 @@ namespace ws::module {
     // Logging and IO.
     template <typename... Ts>
     inline std::ostream& print(Ts&&... args) {
-        return (
-            (ws::module::printer <<
-                style::reset) <<
-                ... <<
-                std::forward<Ts&&>(args)
-        ) << style::reset;
+        #ifndef WS_MODULE_LOG_OFF
+            return (
+                (ws::module::printer <<
+                    style::reset) <<
+                    ... <<
+                    std::forward<Ts&&>(args)
+            ) << style::reset;
+
+        #else
+            return ws::module::printer;
+
+        #endif
     }
 
 
 
     template <typename... Ts>
     inline std::ostream& pipe(Ts&&... args) {
-        return (ws::module::piper << ... << std::forward<Ts&&>(args));
+        #ifndef WS_MODULE_PIPE_OFF
+            return (ws::module::piper << ... << std::forward<Ts&&>(args));
+
+        #else
+            return ws::module::piper;
+
+        #endif
     }
 
 
@@ -351,16 +383,59 @@ namespace ws::module {
     // Logging and IO...
     template <typename... Ts>
     inline std::ostream& println(Ts&&... args) {
-        return ws::module::print(std::forward<Ts&&>(args)...) << '\n';
+        #ifndef WS_MODULE_LOG_OFF
+            return ws::module::print(std::forward<Ts&&>(args)...) << '\n';
+
+        #else
+            return ws::module::printer;
+
+        #endif
     }
 
 
 
     template <typename... Ts>
     inline std::ostream& pipeln(Ts&&... args) {
-        return ws::module::pipe(std::forward<Ts&&>(args)...) << '\n';
+        #ifndef WS_MODULE_PIPE_OFF
+            return ws::module::pipe(std::forward<Ts&&>(args)...) << '\n';
+
+        #else
+            return ws::module::piper;
+
+        #endif
     }
 
+
+
+
+
+    // Print repeated characters.
+    namespace details {
+        // unsafe, can be called like: print_repeat(5, 'n') or print_repeat('n', 5)
+        inline std::ostream& print_repeat(char c, unsigned n) {
+            return ws::module::print(ws::module::details::repeat(c, n));
+        }
+    }
+
+
+    inline std::ostream& print_repeat(const std::string& c, unsigned n) {
+        return ws::module::print(ws::module::repeat(c, n));
+    }
+
+
+    inline std::ostream& print_tabs(unsigned n) {
+        return ws::module::details::print_repeat('\t', n);
+    }
+
+
+    inline std::ostream& print_spaces(unsigned n) {
+        return ws::module::details::print_repeat(' ', n);
+    }
+
+
+    inline std::ostream& print_lines(unsigned n) {
+        return ws::module::details::print_repeat('\n', n);
+    }
 
 
 
@@ -427,6 +502,464 @@ namespace ws::module {
     }
 
 
+
+
+
+
+    // Emphasised prints.
+    template <typename T, typename... Ts>
+    inline std::ostream& print_em(T&& first, Ts&&... args) {
+        return ws::module::print(
+            style::bold, first, style::reset, std::forward<Ts&&>(args)...
+        );
+    }
+
+
+    template <typename T, typename... Ts>
+    inline std::ostream& notice_em(T&& first, Ts&&... args) {
+        return ws::module::notice(
+            style::bold, first, style::reset, std::forward<Ts&&>(args)...
+        );
+    }
+
+
+    template <typename T, typename... Ts>
+    inline std::ostream& warn_em(T&& first, Ts&&... args) {
+        return ws::module::warn(
+            style::bold, first, style::reset, std::forward<Ts&&>(args)...
+        );
+    }
+
+
+    template <typename T, typename... Ts>
+    inline std::ostream& error_em(T&& first, Ts&&... args) {
+        return ws::module::error(
+            style::bold, first, style::reset, std::forward<Ts&&>(args)...
+        );
+    }
+
+
+    template <typename T, typename... Ts>
+    inline std::ostream& success_em(T&& first, Ts&&... args) {
+        return ws::module::success(
+            style::bold, first, style::reset, std::forward<Ts&&>(args)...
+        );
+    }
+
+
+
+
+
+
+
+    // Emphasis with newlines.
+    template <typename... Ts>
+    inline std::ostream& println_em(Ts&&... args) {
+        return ws::module::print_em(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& noticeln_em(Ts&&... args) {
+        return ws::module::notice_em(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& warnln_em(Ts&&... args) {
+        return ws::module::warn_em(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& errorln_em(Ts&&... args) {
+        return ws::module::error_em(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& successln_em(Ts&&... args) {
+        return ws::module::success_em(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+
+
+
+
+    // Headings.
+    template <typename... Ts>
+    inline std::ostream& print_h(Ts&&... args) {
+        return ws::module::print(style::bold, std::forward<Ts&&>(args)...);
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& notice_h(Ts&&... args) {
+        return ws::module::notice(style::bold, std::forward<Ts&&>(args)...);
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& warn_h(Ts&&... args) {
+        return ws::module::warn(style::bold, std::forward<Ts&&>(args)...);
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& error_h(Ts&&... args) {
+        return ws::module::error(style::bold, std::forward<Ts&&>(args)...);
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& success_h(Ts&&... args) {
+        return ws::module::success(style::bold, std::forward<Ts&&>(args)...);
+    }
+
+
+
+
+    // Headings with newlines.
+    template <typename... Ts>
+    inline std::ostream& println_h(Ts&&... args) {
+        return ws::module::print_h(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& noticeln_h(Ts&&... args) {
+        return ws::module::notice_h(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& warnln_h(Ts&&... args) {
+        return ws::module::warn_h(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& errorln_h(Ts&&... args) {
+        return ws::module::error_h(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <typename... Ts>
+    inline std::ostream& successln_h(Ts&&... args) {
+        return ws::module::success_h(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+
+
+
+    // Compile time variants.
+    template <bool B, typename... Ts>
+    constexpr std::ostream& print_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::print(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& pipe_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::pipe(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& notice_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::notice(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& warn_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::warn(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& error_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::error(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& success_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::success(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+
+
+
+
+    // Compile time variants with newlines.
+    template <bool B, typename... Ts>
+    constexpr std::ostream& println_if(Ts&&... args) {
+        return ws::module::print_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& pipeln_if(Ts&&... args) {
+        return ws::module::pipe_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& noticeln_if(Ts&&... args) {
+        return ws::module::notice_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& warnln_if(Ts&&... args) {
+        return ws::module::warn_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& errorln_if(Ts&&... args) {
+        return ws::module::error_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& successln_if(Ts&&... args) {
+        return ws::module::success_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+
+
+
+    // Compile time print repeated characters.
+    namespace details {
+        // unsafe, can be called like: print_repeat(5, 'n') or print_repeat('n', 5)
+        template <bool B>
+        constexpr std::ostream& print_repeat_if(char c, unsigned n) {
+            return ws::module::print_if<B>(ws::module::details::repeat(c, n));
+        }
+    }
+
+
+    template <bool B>
+    constexpr std::ostream& print_repeat_if(const std::string& c, unsigned n) {
+        return ws::module::print_if<B>(ws::module::repeat(c, n));
+    }
+
+
+    template <bool B>
+    constexpr std::ostream& print_tabs_if(unsigned n) {
+        return ws::module::details::print_repeat_if<B>('\t', n);
+    }
+
+
+    template <bool B>
+    constexpr std::ostream& print_spaces_if(unsigned n) {
+        return ws::module::details::print_repeat_if<B>(' ', n);
+    }
+
+
+    template <bool B>
+    constexpr std::ostream& print_lines_if(unsigned n) {
+        return ws::module::details::print_repeat_if<B>('\n', n);
+    }
+
+
+
+
+
+
+
+    // Compile time emphasised variants.
+    template <bool B, typename... Ts>
+    constexpr std::ostream& print_em_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::print_em(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& notice_em_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::notice_em(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& warn_em_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::warn_em(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& error_em_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::error_em(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& success_em_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::success_em(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+
+
+
+
+    // Compile time emphasised variants with newlines.
+    template <bool B, typename... Ts>
+    constexpr std::ostream& println_em_if(Ts&&... args) {
+        return ws::module::print_em_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& noticeln_em_if(Ts&&... args) {
+        return ws::module::notice_em_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& warnln_em_if(Ts&&... args) {
+        return ws::module::warn_em_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& errorln_em_if(Ts&&... args) {
+        return ws::module::error_em_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& successln_em_if(Ts&&... args) {
+        return ws::module::success_em_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+
+
+
+
+
+    // Compile time heading variants.
+    template <bool B, typename... Ts>
+    constexpr std::ostream& print_h_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::print_h(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& notice_h_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::notice_h(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& warn_h_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::warn_h(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& error_h_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::error_h(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& success_h_if(Ts&&... args) {
+        if constexpr(B)
+            return ws::module::success_h(std::forward<Ts&&>(args)...);
+
+        return ws::module::printer;
+    }
+
+
+
+
+
+
+    // Compile time heading variants with newlines.
+    template <bool B, typename... Ts>
+    constexpr std::ostream& println_h_if(Ts&&... args) {
+        return ws::module::print_h_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& noticeln_h_if(Ts&&... args) {
+        return ws::module::notice_h_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& warnln_h_if(Ts&&... args) {
+        return ws::module::warn_h_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& errorln_h_if(Ts&&... args) {
+        return ws::module::error_h_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
+
+
+    template <bool B, typename... Ts>
+    constexpr std::ostream& successln_h_if(Ts&&... args) {
+        return ws::module::success_h_if<B>(std::forward<Ts&&>(args)..., '\n');
+    }
 
 
 
