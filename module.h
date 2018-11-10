@@ -47,6 +47,8 @@ namespace ws::module {
     // std::string constructor does not allow repeating a string so
     // this function implements it.
     inline std::string repeat(const std::string& c, unsigned n) {
+        if (!n) return ""; // Check for 0.
+
         std::string out = c;
 
         for (n--; n > 0; n--) out += c;
