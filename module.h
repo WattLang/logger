@@ -121,23 +121,21 @@ namespace ws::module {
 
 
     // Accumulate all data and return a single string.
-    inline std::string receive_all(
-        std::streamsize buffer_size = details::DEFAULT_BUFFER_SIZE
-    ) {
-        std::string accumulator;
+    inline std::string receive_all() {
+        // Find the size of the input stream.
+        std::cin.seekg(0, std::cin.end);
+        auto size = std::cin.tellg();
+        std::cin.seekg(0);
 
 
-        while (true) {
-            auto&& [buffer, eof] = ws::module::receive_one(buffer_size);
-
-            accumulator += buffer;
-
-            if (eof)
-                break;
-        }
+        // Reserve a buffer.
+        std::string str(static_cast<std::string::size_type>(size), '\0');
 
 
-        return accumulator;
+        // Read the stream into the buffer.
+        std::cin.read(str.data(), static_cast<std::streamsize>(size));
+
+        return str;
     }
 
 
