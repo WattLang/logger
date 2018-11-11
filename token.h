@@ -36,6 +36,17 @@ namespace ws::token {
         {
 
         }
+
+
+
+        Token(
+            type_t type_,
+            const std::string& content_
+        ): type(type_), content(content_) {}
+
+
+
+        Token(type_t type_): type(type_) {}
     };
 
 
