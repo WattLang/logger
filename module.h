@@ -130,6 +130,10 @@ namespace ws::module {
         std::cin.seekg(0);
 
 
+        // Check stream actually has content.
+        if (size <= 0) return std::string{};
+
+
         // Reserve a buffer.
         std::string str(static_cast<std::string::size_type>(size), '\0');
 
