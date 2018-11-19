@@ -10,15 +10,16 @@
 
 
 namespace ws::token {
-    using Type = std::uint16_t;
+    using Type     = std::uint16_t;
+    using Position = std::uint32_t;
 
 
 
 
     struct Token {
         Type type;
-        std::uint32_t line;
-        std::uint32_t column;
+        Position line;
+        Position column;
         std::string_view content;
 
 
@@ -28,8 +29,8 @@ namespace ws::token {
 
         Token(
             Type type_,
-            std::uint32_t line_,
-            std::uint32_t column_,
+            Position line_,
+            Position column_,
             std::string_view content_
         ):
             type(type_),
