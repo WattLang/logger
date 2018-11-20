@@ -10,16 +10,30 @@
 
 
 namespace ws::token {
-    using Type     = std::uint16_t;
-    using Position = std::uint32_t;
+    using Type = std::uint16_t;
+
+    struct Position {
+        using size_type = std::uint32_t;
+
+
+        size_type line = 1, column = 1;
+
+        void nextln(size_type n = 1) {
+            column = 1;
+            line += n;
+        }
+
+        void next(size_type n = 1) {
+            column += n;
+        }
+    };
 
 
 
 
     struct Token {
         Type type;
-        Position line;
-        Position column;
+        Position pos;
         std::string_view content;
 
 
@@ -29,14 +43,24 @@ namespace ws::token {
 
         Token(
             Type type_,
-            Position line_,
-            Position column_,
+            Position pos_,
             std::string_view content_
         ):
             type(type_),
-            line(line_),
-            column(column_),
+            pos(pos_),
             content(content_)
+        {
+
+        }
+
+
+
+        Token(
+            Type type_,
+            Position pos_
+        ):
+            type(type_),
+            pos(pos_)
         {
 
         }
@@ -279,16 +303,22 @@ namespace ws::token {
 
 
 
+    inline std::ostream& operator<<(std::ostream& os, const Position& tok) {
+        const auto& [line, column] = tok;
 
+        os << "(" << line << ", " << column << ")";
+
+        return os;
+    }
 
 
 
 
 
     inline std::ostream& operator<<(std::ostream& os, const Token& tok) {
-        const auto& [type, line, column, content] = tok;
+        const auto& [type, pos, content] = tok;
 
-        os << "[" << type << ", (" << line << ", " << column << "), \"" << content << "\"]";
+        os << "[" << type << ", " << pos << ", \"" << content << "\"]";
 
         return os;
     }
