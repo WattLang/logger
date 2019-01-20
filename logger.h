@@ -130,16 +130,18 @@ namespace ws::module {
         std::cin.seekg(0);
 
 
-        // Check stream actually has content.
-        if (size <= 0) return std::string{};
+        // Check pipe isn't empty.
+        if (size <= 0)
+            return {};
 
 
-        // Reserve a buffer.
-        std::string str(static_cast<std::string::size_type>(size), '\0');
+        auto size1 = static_cast<std::string::size_type>(size);
+        auto size2 = static_cast<std::streamsize>(size);
 
+        // Reserve buffer and read pipe.
+        std::string str(size1, '\0');
+        std::cin.read(str.data(), size2);
 
-        // Read the stream into the buffer.
-        std::cin.read(str.data(), static_cast<std::streamsize>(size));
 
         return str;
     }
