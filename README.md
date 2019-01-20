@@ -13,19 +13,13 @@ A simple header for making the task of piping data between processes easier.
 #include "module.h"
 
 
-int BUFFER_SIZE = 32;
-
-
 int main(int argc, char const *argv[]) {
     // Stream input data and process it in chunks.
-    ws::module::receive(
-        BUFFER_SIZE,
-
-        [&] (const std::string& buffer, int id, bool is_end) {
-            // Pass the data along through the pipe.
-            ws::module::piper << buffer;
-        }
-    );
+    
+    ws::module::receive([&] (const std::string& buffer, int id, bool is_end) {
+        // Pass the data along through the pipe.
+        ws::module::piper << buffer;
+    });
 
 
     return 0;
@@ -39,13 +33,9 @@ int main(int argc, char const *argv[]) {
 #include "module.h"
 
 
-int BUFFER_SIZE = 32;
-
-
 int main(int argc, char const *argv[]) {
     // Accumulate all input data.
-    auto contents = ws::module::receive_all(BUFFER_SIZE);
-
+    auto contents = ws::module::receive_all();
 
     // Pipe the contents.
     ws::module::piper << contents;
@@ -289,7 +279,7 @@ int main(int argc, char const *argv[]) {
 
 | Data Handling | ws::module::                                                 |
 | ------------- | ------------------------------------------------------------ |
-| receive       | Recieve data on std::cin in chunks of N bytes using a callback. |
+| receive       | Recieve data on std::cin in chunks using a callback. |
 | receive_all   | Accumulate all the data from std::cin and return a std::string. |
 
 | Logging | ws::module::                                                                          |
