@@ -16,9 +16,9 @@ A simple header for making the task of piping data between processes easier.
 int main(int argc, char const *argv[]) {
     // Stream input data and process it in chunks.
     
-    ws::module::receive([&] (const std::string& buffer, int id, bool is_end) {
+    wlg::receive([&] (const std::string& buffer, int id, bool is_end) {
         // Pass the data along through the pipe.
-        ws::module::piper << buffer;
+        wlg::piper << buffer;
     });
 
 
@@ -35,10 +35,10 @@ int main(int argc, char const *argv[]) {
 
 int main(int argc, char const *argv[]) {
     // Accumulate all input data.
-    auto contents = ws::module::receive_all();
+    auto contents = wlg::receive_all();
 
     // Pipe the contents.
-    ws::module::piper << contents;
+    wlg::piper << contents;
 
     return 0;
 }
@@ -53,28 +53,28 @@ int main(int argc, char const *argv[]) {
 
 int main(int argc, char const *argv[]) {
 
-    ws::module::print("Hello", " ", "there!", "\n");
-    ws::module::println("Hello", " ", "there!");
+    wlg::print("Hello", " ", "there!", "\n");
+    wlg::println("Hello", " ", "there!");
 
-    ws::module::pipe("Pipe ", 1, "\n");
-    ws::module::pipeln("Pipe ", 2);
+    wlg::pipe("Pipe ", 1, "\n");
+    wlg::pipeln("Pipe ", 2);
 
-    ws::module::notice("Notice ", 1, "\n");
-    ws::module::noticeln("Notice ", 2);
+    wlg::notice("Notice ", 1, "\n");
+    wlg::noticeln("Notice ", 2);
 
-    ws::module::warn("Warn ", 1, "\n");
-    ws::module::warnln("Warn ", 2);
+    wlg::warn("Warn ", 1, "\n");
+    wlg::warnln("Warn ", 2);
 
-    ws::module::error("Error ", 1, "\n");
-    ws::module::errorln("Error ", 2);
+    wlg::error("Error ", 1, "\n");
+    wlg::errorln("Error ", 2);
 
-    ws::module::success("Success ", 1, "\n");
-    ws::module::successln("Success ", 2);
+    wlg::success("Success ", 1, "\n");
+    wlg::successln("Success ", 2);
 
-    ws::module::print("Yes!") << " " << "No!" << std::endl;
+    wlg::print("Yes!") << " " << "No!" << std::endl;
 
-    ws::module::printer << "Printer\n";
-    ws::module::piper << "Piper\n";
+    wlg::printer << "Printer\n";
+    wlg::piper << "Piper\n";
 
     return 0;
 }
@@ -89,59 +89,59 @@ int main(int argc, char const *argv[]) {
 
 int main(int argc, char const *argv[]) {
     // Indentation.
-    ws::module::println(ws::module::style::bold, "Indentation!");
+    wlg::println(wlg::style::bold, "Indentation!");
 
-    ws::module::print(ws::module::tabs(1));
-    ws::module::noticeln(ws::module::spaces(0), "Testing...");
+    wlg::print(wlg::tabs(1));
+    wlg::noticeln(wlg::spaces(0), "Testing...");
 
-    ws::module::print(ws::module::tabs(1));
-    ws::module::warnln(ws::module::spaces(1),   "Testing...");
+    wlg::print(wlg::tabs(1));
+    wlg::warnln(wlg::spaces(1),   "Testing...");
 
-    ws::module::print(ws::module::tabs(1));
-    ws::module::errorln(ws::module::spaces(2),  "Testing...");
+    wlg::print(wlg::tabs(1));
+    wlg::errorln(wlg::spaces(2),  "Testing...");
 
-    ws::module::print(ws::module::tabs(1));
-    ws::module::successln(ws::module::spaces(3),  "Testing...");
+    wlg::print(wlg::tabs(1));
+    wlg::successln(wlg::spaces(3),  "Testing...");
 
 
 
 
     // Styles.
-    ws::module::println(ws::module::style::bold, "\nStyles!");
+    wlg::println(wlg::style::bold, "\nStyles!");
 
-    ws::module::println(
-        ws::module::tabs(1),
-        ws::module::style::notice,
+    wlg::println(
+        wlg::tabs(1),
+        wlg::style::notice,
         "Hello!"
     );
 
-    ws::module::println(
-        ws::module::tabs(1),
-        ws::module::style::warn,
+    wlg::println(
+        wlg::tabs(1),
+        wlg::style::warn,
         "Hello!"
     );
 
-    ws::module::println(
-        ws::module::tabs(1),
-        ws::module::style::error,
+    wlg::println(
+        wlg::tabs(1),
+        wlg::style::error,
         "Hello!"
     );
 
-    ws::module::println(
-        ws::module::tabs(1),
-        ws::module::style::success,
+    wlg::println(
+        wlg::tabs(1),
+        wlg::style::success,
         "Hello!"
     );
 
-    ws::module::println(
-        ws::module::tabs(1),
-        ws::module::style::bold,
+    wlg::println(
+        wlg::tabs(1),
+        wlg::style::bold,
         "Hello!"
     );
 
-    ws::module::println(
-        ws::module::tabs(1),
-        ws::module::style::reverse,
+    wlg::println(
+        wlg::tabs(1),
+        wlg::style::reverse,
         "Hello!"
     );
 
@@ -149,75 +149,75 @@ int main(int argc, char const *argv[]) {
 
 
     // Logging.
-    ws::module::println(ws::module::style::bold, "\nLogging!");
+    wlg::println(wlg::style::bold, "\nLogging!");
 
-    ws::module::print(ws::module::tabs(1));
-    ws::module::noticeln("Notice");
+    wlg::print(wlg::tabs(1));
+    wlg::noticeln("Notice");
 
-    ws::module::print(ws::module::tabs(1));
-    ws::module::warnln("Warn ");
+    wlg::print(wlg::tabs(1));
+    wlg::warnln("Warn ");
 
-    ws::module::print(ws::module::tabs(1));
-    ws::module::errorln("Error ");
+    wlg::print(wlg::tabs(1));
+    wlg::errorln("Error ");
 
-    ws::module::print(ws::module::tabs(1));
-    ws::module::successln("Success ");
+    wlg::print(wlg::tabs(1));
+    wlg::successln("Success ");
 
 
 
 
     // Colours.
-    ws::module::println(ws::module::style::bold, "\nColours!");
+    wlg::println(wlg::style::bold, "\nColours!");
 
-    ws::module::println(
-        ws::module::colour::fg::dim::black,   "black",   " ",
-        ws::module::colour::fg::dim::grey,    "grey",    " ",
-        ws::module::colour::fg::dim::red,     "red",     " ",
-        ws::module::colour::fg::dim::yellow,  "yellow",  " ",
-        ws::module::colour::fg::dim::green,   "green",   " ",
-        ws::module::colour::fg::dim::blue,    "blue",    " ",
-        ws::module::colour::fg::dim::magenta, "magenta", " ",
-        ws::module::colour::fg::dim::cyan,    "cyan",    " "
+    wlg::println(
+        wlg::colour::fg::dim::black,   "black",   " ",
+        wlg::colour::fg::dim::grey,    "grey",    " ",
+        wlg::colour::fg::dim::red,     "red",     " ",
+        wlg::colour::fg::dim::yellow,  "yellow",  " ",
+        wlg::colour::fg::dim::green,   "green",   " ",
+        wlg::colour::fg::dim::blue,    "blue",    " ",
+        wlg::colour::fg::dim::magenta, "magenta", " ",
+        wlg::colour::fg::dim::cyan,    "cyan",    " "
     );
 
-    ws::module::println(
-        ws::module::colour::fg::black,   "black",   " ",
-        ws::module::colour::fg::grey,    "grey",    " ",
-        ws::module::colour::fg::red,     "red",     " ",
-        ws::module::colour::fg::yellow,  "yellow",  " ",
-        ws::module::colour::fg::green,   "green",   " ",
-        ws::module::colour::fg::blue,    "blue",    " ",
-        ws::module::colour::fg::magenta, "magenta", " ",
-        ws::module::colour::fg::cyan,    "cyan",    " "
+    wlg::println(
+        wlg::colour::fg::black,   "black",   " ",
+        wlg::colour::fg::grey,    "grey",    " ",
+        wlg::colour::fg::red,     "red",     " ",
+        wlg::colour::fg::yellow,  "yellow",  " ",
+        wlg::colour::fg::green,   "green",   " ",
+        wlg::colour::fg::blue,    "blue",    " ",
+        wlg::colour::fg::magenta, "magenta", " ",
+        wlg::colour::fg::cyan,    "cyan",    " "
     );
 
-    ws::module::println(
-        ws::module::colour::fg::bright::black,   "black",   " ",
-        ws::module::colour::fg::bright::grey,    "grey",    " ",
-        ws::module::colour::fg::bright::red,     "red",     " ",
-        ws::module::colour::fg::bright::yellow,  "yellow",  " ",
-        ws::module::colour::fg::bright::green,   "green",   " ",
-        ws::module::colour::fg::bright::blue,    "blue",    " ",
-        ws::module::colour::fg::bright::magenta, "magenta", " ",
-        ws::module::colour::fg::bright::cyan,    "cyan",    " "
+    wlg::println(
+        wlg::colour::fg::bright::black,   "black",   " ",
+        wlg::colour::fg::bright::grey,    "grey",    " ",
+        wlg::colour::fg::bright::red,     "red",     " ",
+        wlg::colour::fg::bright::yellow,  "yellow",  " ",
+        wlg::colour::fg::bright::green,   "green",   " ",
+        wlg::colour::fg::bright::blue,    "blue",    " ",
+        wlg::colour::fg::bright::magenta, "magenta", " ",
+        wlg::colour::fg::bright::cyan,    "cyan",    " "
     );
 
 
 
 
     // Lines, Tabs and Spaces.
-    ws::module::println(ws::module::style::bold, "\nFormatting!");
-    ws::module::println(ws::module::tabs(1), "Tabs!");
-    ws::module::println(ws::module::spaces(1), "Spaces!");
-    ws::module::println(ws::module::lines(1), "Lines!");
-    ws::module::println(ws::module::repeat(">", 5), "Repeated string!");
+    wlg::println(wlg::style::bold, "\nFormatting!");
+    wlg::println(wlg::tabs(1), "Tabs!");
+    wlg::println(wlg::spaces(1), "Spaces!");
+    wlg::println(wlg::lines(1), "Lines!");
+    wlg::println(wlg::repeat(">", 5), "Repeated string!");
 
 
 
 
     // Rainbows.
-    ws::module::println(ws::module::style::bold, "\nRainbows!");
-    ws::module::rainbowln("Hello ", "how ", "are ", "you?");
+    wlg::println(wlg::style::bold, "\nRainbows!");
+    wlg::rainbowln("Hello ", "how ", "are ", "you?");
 
     return 0;
 }
@@ -241,7 +241,7 @@ int main(int argc, char const *argv[]) {
 
 #### Constants & Globals
 
-| Styles  | ws::module::style::                             |
+| Styles  | wlg::style::                             |
 | ------- | ----------------------------------------------- |
 | bold    | Makes the text bold.                            |
 | reverse | Swaps the background and foreground colours.    |
@@ -250,12 +250,12 @@ int main(int argc, char const *argv[]) {
 | warn    | Set the text to bold and use the warn colour.   |
 | error   | Set the text to bold and use the error colour.  |
 
-| Streams | ws::module::                       |
+| Streams | wlg::                       |
 | :------ | ---------------------------------- |
 | printer | Alias the std::cerr output steam.  |
 | piper   | Alias the std::cout output stream. |
 
-| Colours | ws::module::colour::                                     |
+| Colours | wlg::colour::                                     |
 | ------- | -------------------------------------------------------- |
 | black   | Looks like coal.                                         |
 | red     | Same colour as the liquid being pumped around your body. |
@@ -268,7 +268,7 @@ int main(int argc, char const *argv[]) {
 
 > All of the above colours exist in `fg::`, `bg::`, `fg::bright::`, `bg::bright::`, `fg::dim::` and `bg::dim::`.
 
-| Special Colours | ws::module::colour::        |
+| Special Colours | wlg::colour::        |
 | --------------- | --------------------------- |
 | notice          | Colour to use for notices.  |
 | warn            | Colour to use for warnings. |
@@ -277,24 +277,24 @@ int main(int argc, char const *argv[]) {
 
 #### Functions.
 
-| Data Handling | ws::module::                                                 |
+| Data Handling | wlg::                                                 |
 | ------------- | ------------------------------------------------------------ |
 | receive       | Recieve data on std::cin in chunks using a callback. |
 | receive_all   | Accumulate all the data from std::cin and return a std::string. |
 
-| Logging | ws::module::                                                                          |
+| Logging | wlg::                                                                          |
 | ------- | ------------------------------------------------------------------------------------- |
-| print   | Prints a list of objects to ws::module::printer and appends ws::module::style::reset. |
-| pipe    | Same as print but outputs to ws::module::piper.                                       |
-| notice  | Same as print but prepends message with `[-]` and uses ws::module::style::notice.     |
-| warn    | Same as print but prepends message with `[*]` and uses ws::module::style::warn.       |
-| error   | Same as print but prepends message with `[!]` and uses ws::module::style::error.      |
-| success | Same as print but prepends message with `[^]` and uses ws::module::style::success.    |
+| print   | Prints a list of objects to wlg::printer and appends wlg::style::reset. |
+| pipe    | Same as print but outputs to wlg::piper.                                       |
+| notice  | Same as print but prepends message with `[-]` and uses wlg::style::notice.     |
+| warn    | Same as print but prepends message with `[*]` and uses wlg::style::warn.       |
+| error   | Same as print but prepends message with `[!]` and uses wlg::style::error.      |
+| success | Same as print but prepends message with `[^]` and uses wlg::style::success.    |
 | rainbow | Same as print but prints each object with a random colour.   |
 
 > All of the above functions also have newline variants like: `println` or `errorln` etc.
 
-| Utility | ws::module::                                  |
+| Utility | wlg::                                  |
 | ------- | --------------------------------------------- |
 | repeat  | Generate a string of N sequential strings.    |
 | spaces  | Generate a string of N spaces.                |
